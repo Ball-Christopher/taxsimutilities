@@ -13,6 +13,10 @@ fast_group_min <- function(x, grp) {
     .Call(`_taxsimutilities_fast_group_min`, x, grp)
 }
 
+greg_cpp <- function(W, C, B, L, U) {
+    .Call(`_taxsimutilities_greg_cpp`, W, C, B, L, U)
+}
+
 run_sim_cpp <- function(iters, M, N, index, U, EU, V, s_v, obs_util, alt_obs_util, h, a, b, sw_cv, sw_ev, fc, inflator, sub_disp, sub_alt_disp, ID, out, CV, EV, disp_matrix, cw, lambda, ncores) {
     invisible(.Call(`_taxsimutilities_run_sim_cpp`, iters, M, N, index, U, EU, V, s_v, obs_util, alt_obs_util, h, a, b, sw_cv, sw_ev, fc, inflator, sub_disp, sub_alt_disp, ID, out, CV, EV, disp_matrix, cw, lambda, ncores))
 }
