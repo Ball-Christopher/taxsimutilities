@@ -6,6 +6,30 @@
 
 using namespace Rcpp;
 
+// greg_cpp_one
+arma::mat greg_cpp_one(arma::colvec W, arma::mat& C, arma::vec& B);
+RcppExport SEXP _taxsimutilities_greg_cpp_one(SEXP WSEXP, SEXP CSEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::colvec >::type W(WSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type C(CSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(greg_cpp_one(W, C, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fast_bs_sum
+NumericVector fast_bs_sum(NumericVector pattern);
+RcppExport SEXP _taxsimutilities_fast_bs_sum(SEXP patternSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type pattern(patternSEXP);
+    rcpp_result_gen = Rcpp::wrap(fast_bs_sum(pattern));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fast_group_sum
 NumericVector fast_group_sum(NumericVector x, IntegerVector grp);
 RcppExport SEXP _taxsimutilities_fast_group_sum(SEXP xSEXP, SEXP grpSEXP) {
@@ -94,6 +118,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_taxsimutilities_greg_cpp_one", (DL_FUNC) &_taxsimutilities_greg_cpp_one, 3},
+    {"_taxsimutilities_fast_bs_sum", (DL_FUNC) &_taxsimutilities_fast_bs_sum, 1},
     {"_taxsimutilities_fast_group_sum", (DL_FUNC) &_taxsimutilities_fast_group_sum, 2},
     {"_taxsimutilities_fast_group_max", (DL_FUNC) &_taxsimutilities_fast_group_max, 2},
     {"_taxsimutilities_fast_group_min", (DL_FUNC) &_taxsimutilities_fast_group_min, 2},
