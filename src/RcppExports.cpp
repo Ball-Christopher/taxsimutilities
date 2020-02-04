@@ -66,6 +66,147 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// gini_sorted
+double gini_sorted(const std::vector<double> y, const std::vector<double> w);
+RcppExport SEXP _taxsimutilities_gini_sorted(SEXP ySEXP, SEXP wSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double> >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const std::vector<double> >::type w(wSEXP);
+    rcpp_result_gen = Rcpp::wrap(gini_sorted(y, w));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fast_poverty
+NumericMatrix fast_poverty(const std::vector<double> y, const std::vector<double> w, const std::vector<double> k, int ncores);
+RcppExport SEXP _taxsimutilities_fast_poverty(SEXP ySEXP, SEXP wSEXP, SEXP kSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double> >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const std::vector<double> >::type w(wSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double> >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(fast_poverty(y, w, k, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fast_med
+double fast_med(NumericVector y, NumericVector w);
+RcppExport SEXP _taxsimutilities_fast_med(SEXP ySEXP, SEXP wSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
+    rcpp_result_gen = Rcpp::wrap(fast_med(y, w));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fast_pov
+double fast_pov(NumericVector y, NumericVector w, double thres);
+RcppExport SEXP _taxsimutilities_fast_pov(SEXP ySEXP, SEXP wSEXP, SEXP thresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
+    Rcpp::traits::input_parameter< double >::type thres(thresSEXP);
+    rcpp_result_gen = Rcpp::wrap(fast_pov(y, w, thres));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fast_cpov
+double fast_cpov(NumericVector y, NumericVector w, NumericVector k, double thres);
+RcppExport SEXP _taxsimutilities_fast_cpov(SEXP ySEXP, SEXP wSEXP, SEXP kSEXP, SEXP thresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< double >::type thres(thresSEXP);
+    rcpp_result_gen = Rcpp::wrap(fast_cpov(y, w, k, thres));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fast_povgap
+double fast_povgap(NumericVector y, NumericVector w, double thres, double exp);
+RcppExport SEXP _taxsimutilities_fast_povgap(SEXP ySEXP, SEXP wSEXP, SEXP thresSEXP, SEXP expSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
+    Rcpp::traits::input_parameter< double >::type thres(thresSEXP);
+    Rcpp::traits::input_parameter< double >::type exp(expSEXP);
+    rcpp_result_gen = Rcpp::wrap(fast_povgap(y, w, thres, exp));
+    return rcpp_result_gen;
+END_RCPP
+}
+// theil_l
+double theil_l(NumericVector y, NumericVector w);
+RcppExport SEXP _taxsimutilities_theil_l(SEXP ySEXP, SEXP wSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
+    rcpp_result_gen = Rcpp::wrap(theil_l(y, w));
+    return rcpp_result_gen;
+END_RCPP
+}
+// theil_t
+double theil_t(NumericVector y, NumericVector w);
+RcppExport SEXP _taxsimutilities_theil_t(SEXP ySEXP, SEXP wSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
+    rcpp_result_gen = Rcpp::wrap(theil_t(y, w));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gen_ent
+double gen_ent(NumericVector y, NumericVector w, double a);
+RcppExport SEXP _taxsimutilities_gen_ent(SEXP ySEXP, SEXP wSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(gen_ent(y, w, a));
+    return rcpp_result_gen;
+END_RCPP
+}
+// atkinson_1
+double atkinson_1(NumericVector y, NumericVector w);
+RcppExport SEXP _taxsimutilities_atkinson_1(SEXP ySEXP, SEXP wSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
+    rcpp_result_gen = Rcpp::wrap(atkinson_1(y, w));
+    return rcpp_result_gen;
+END_RCPP
+}
+// atkinson_e
+double atkinson_e(NumericVector y, NumericVector w, double e);
+RcppExport SEXP _taxsimutilities_atkinson_e(SEXP ySEXP, SEXP wSEXP, SEXP eSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
+    Rcpp::traits::input_parameter< double >::type e(eSEXP);
+    rcpp_result_gen = Rcpp::wrap(atkinson_e(y, w, e));
+    return rcpp_result_gen;
+END_RCPP
+}
 // greg_cpp
 arma::mat greg_cpp(arma::colvec W, arma::mat& C, arma::vec& B, arma::colvec& L, arma::colvec& U);
 RcppExport SEXP _taxsimutilities_greg_cpp(SEXP WSEXP, SEXP CSEXP, SEXP BSEXP, SEXP LSEXP, SEXP USEXP) {
@@ -123,6 +264,17 @@ static const R_CallMethodDef CallEntries[] = {
     {"_taxsimutilities_fast_group_sum", (DL_FUNC) &_taxsimutilities_fast_group_sum, 2},
     {"_taxsimutilities_fast_group_max", (DL_FUNC) &_taxsimutilities_fast_group_max, 2},
     {"_taxsimutilities_fast_group_min", (DL_FUNC) &_taxsimutilities_fast_group_min, 2},
+    {"_taxsimutilities_gini_sorted", (DL_FUNC) &_taxsimutilities_gini_sorted, 2},
+    {"_taxsimutilities_fast_poverty", (DL_FUNC) &_taxsimutilities_fast_poverty, 4},
+    {"_taxsimutilities_fast_med", (DL_FUNC) &_taxsimutilities_fast_med, 2},
+    {"_taxsimutilities_fast_pov", (DL_FUNC) &_taxsimutilities_fast_pov, 3},
+    {"_taxsimutilities_fast_cpov", (DL_FUNC) &_taxsimutilities_fast_cpov, 4},
+    {"_taxsimutilities_fast_povgap", (DL_FUNC) &_taxsimutilities_fast_povgap, 4},
+    {"_taxsimutilities_theil_l", (DL_FUNC) &_taxsimutilities_theil_l, 2},
+    {"_taxsimutilities_theil_t", (DL_FUNC) &_taxsimutilities_theil_t, 2},
+    {"_taxsimutilities_gen_ent", (DL_FUNC) &_taxsimutilities_gen_ent, 3},
+    {"_taxsimutilities_atkinson_1", (DL_FUNC) &_taxsimutilities_atkinson_1, 2},
+    {"_taxsimutilities_atkinson_e", (DL_FUNC) &_taxsimutilities_atkinson_e, 3},
     {"_taxsimutilities_greg_cpp", (DL_FUNC) &_taxsimutilities_greg_cpp, 5},
     {"_taxsimutilities_run_sim_cpp", (DL_FUNC) &_taxsimutilities_run_sim_cpp, 27},
     {NULL, NULL, 0}
