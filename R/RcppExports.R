@@ -21,6 +21,50 @@ fast_group_min <- function(x, grp) {
     .Call(`_taxsimutilities_fast_group_min`, x, grp)
 }
 
+gini_sorted <- function(y, w) {
+    .Call(`_taxsimutilities_gini_sorted`, y, w)
+}
+
+fast_poverty <- function(y, w, k, ncores) {
+    .Call(`_taxsimutilities_fast_poverty`, y, w, k, ncores)
+}
+
+fast_med <- function(y, w) {
+    .Call(`_taxsimutilities_fast_med`, y, w)
+}
+
+fast_pov <- function(y, w, thres) {
+    .Call(`_taxsimutilities_fast_pov`, y, w, thres)
+}
+
+fast_cpov <- function(y, w, k, thres) {
+    .Call(`_taxsimutilities_fast_cpov`, y, w, k, thres)
+}
+
+fast_povgap <- function(y, w, thres, exp) {
+    .Call(`_taxsimutilities_fast_povgap`, y, w, thres, exp)
+}
+
+theil_l <- function(y, w) {
+    .Call(`_taxsimutilities_theil_l`, y, w)
+}
+
+theil_t <- function(y, w) {
+    .Call(`_taxsimutilities_theil_t`, y, w)
+}
+
+gen_ent <- function(y, w, a) {
+    .Call(`_taxsimutilities_gen_ent`, y, w, a)
+}
+
+atkinson_1 <- function(y, w) {
+    .Call(`_taxsimutilities_atkinson_1`, y, w)
+}
+
+atkinson_e <- function(y, w, e) {
+    .Call(`_taxsimutilities_atkinson_e`, y, w, e)
+}
+
 greg_cpp <- function(W, C, B, L, U) {
     .Call(`_taxsimutilities_greg_cpp`, W, C, B, L, U)
 }
