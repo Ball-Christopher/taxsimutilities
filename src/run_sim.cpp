@@ -69,7 +69,7 @@ void fast_rand_jump(uint64_t &t1, uint64_t &t2) {
       next(t1, t2);
     }
 
-    t1 = s0;
+  t1 = s0;
   t2 = s1;
 }
 
@@ -79,27 +79,6 @@ void set_fast_seed(int n, uint64_t &t1, uint64_t &t2) {
   t1 = split_mix_64(n);
   t2 = split_mix_64(t1);
 }
-
-/*
-// [[Rcpp::export(rng = false)]]
-NumericVector fast_rand(int n, int stream = 0){
-  NumericVector out(n);
-
-  // Set up the random number generator
-  uint64_t s1 = 0;
-  uint64_t s2 = 0;
-  set_fast_seed(435346, s1, s2);
-
-  for(int i = 0; i < stream; ++i){
-    fast_rand_jump(s1, s2);
-  }
-
-  for(int i = 0; i < n; ++i) {
-    out[i] = to_double(next(s1, s2));
-  }
-  return out;
-}
-*/
 
 static inline double
   ws (std::vector<float> cw, 
@@ -111,32 +90,8 @@ static inline double
     return(0);
   }
 
-/*
-// [[Rcpp::export(rng = false)]]
-NumericVector fast_ws(int n, 
-                      NumericVector cw,
-                      int N,
-                      int stream = 0){
-  NumericVector out(n);
-  
-  // Set up the random number generator
-  uint64_t s1 = 0;
-  uint64_t s2 = 0;
-  set_fast_seed(435346, s1, s2);
-  
-  for(int i = 0; i < stream; ++i){
-    fast_rand_jump(s1, s2);
-  }
-  
-  for(int i = 0; i < n; ++i) {
-    out[i] = ws(cw, s1, s2);
-  }
-  return out;
-}
-*/
-
 static inline int 
-  cpois (double lambda, uint64_t &s1, uint64_t &s2){
+  cpois (const double lambda, uint64_t &s1, uint64_t &s2){
     int k = 0;
     double L = exp(-lambda);
     double p = 1.0;
@@ -147,223 +102,125 @@ static inline int
     return(k - 1);
   }
 
-/*
 // [[Rcpp::export(rng = false)]]
-NumericVector fast_pois(int n, float lambda, int stream = 0){
-  NumericVector out(n);
-  
-  // Set up the random number generator
-  uint64_t s1 = 0;
-  uint64_t s2 = 0;
-  set_fast_seed(435346, s1, s2);
-  
-  for(int i = 0; i < stream; ++i){
-    fast_rand_jump(s1, s2);
-  }
-  
-  for(int i = 0; i < n; ++i) {
-    out[i] = cpois(lambda, s1, s2);
-  }
-  return out;
-}
- */
-
-static inline float
-  fastlog2 (float x)
-  {
-    union { float f; uint32_t i; } vx = { x };
-    union { uint32_t i; float f; } mx = { (vx.i & 0x007FFFFF) | 0x3f000000 };
-    float y = vx.i;
-    y *= 1.1920928955078125e-7f;
-
-    return y - 124.22551499f
-    - 1.498030302f * mx.f
-      - 1.72587999f / (0.3520887068f + mx.f);
-  }
-
-static inline float
-  fastlog (float x)
-  {
-    return 0.69314718f * fastlog2 (x);
-  }
-
-// [[Rcpp::export(rng = false)]]
-void run_sim_cpp(int iters, const int M, const int N,
-                 const std::vector<int> index,
+void run_sim_cpp_parallel(const int iters, 
+                 const int M, const int N,
+                 const std::vector<int> in_matrix,
                  const std::vector<float> U,
-                 const std::vector<float> EU,
                  const std::vector<float> V,
-                 const std::vector<float> s_v,
-                 const std::vector<float> obs_util,
-                 const std::vector<float> alt_obs_util,
-                 const std::vector<float> h,
-                 const std::vector<float> a,
-                 const std::vector<float> b,
-                 const std::vector<float> sw_cv,
-                 const std::vector<float> sw_ev,
-                 const std::vector<float> fc,
-                 const std::vector<float> inflator,
-                 const std::vector<float> sub_disp,
-                 const std::vector<float> sub_alt_disp,
                  const std::vector<int> ID,
-                 NumericMatrix out,
-                 NumericMatrix CV,
-                 NumericMatrix EV,
-                 NumericMatrix disp_matrix,
+                 NumericMatrix out_matrix,
                  const std::vector<float> cw,
                  const std::vector<float> lambda,
-                 int ncores){
+                 const int ncores, const int seed){
 
   // Set up the random number generator
   uint64_t s1 = 0;
   uint64_t s2 = 0;
-  set_fast_seed(432635754, s1, s2);
+  set_fast_seed(seed, s1, s2);
 
-  uint64_t s[N][2];
+  uint64_t s[2*N];
 
   auto max_id = *max_element(std::begin(ID), std::end(ID));
   std::set<int> id_set(ID.begin(), ID.end());
 
   int count = 0;
-  for (int i = 1; i < max_id; ++i){
+  for (int i = 1; i <= max_id; ++i){
     fast_rand_jump(s1, s2);
     if(id_set.find(i) != id_set.end()){
-      s[count][0] = s1;
-      s[count][1] = s2;
+      s[2*count] = s1;
+      s[2*count + 1] = s2;
       count++;
     }
   }
 
-  // Declare local variables
-  float err_obs = 0;
-  float log_err_obs = 0;
-  float max_u = 0;
-  float max_ind = 0;
-  float err = 0;
-  float u = 0;
+  const int max_choices = 100;
+  std::vector<float> ui(M);
+  std::vector<float> vi(M);
 
-  // float c = 0;
-  // float int_cv = 0;
-  // float cv = 0;
-  // float min_cv = 0;
-  // float sum_cv = 0;
-  // float start_cv = 0;
-
-  // float int_ev = 0;
-  // float ev = 0;
-  // float min_ev = 0;
-  // float sum_ev = 0;
-  // float start_ev = 0;
-
-  float obs_diff = 0;
-  
-  std::vector<float> cwi(1000, 0.0);
-  std::vector<float> ref_dist(1000, 0.0);
-  float lam = 0;
-  float s_pois = 0;
-  int j = 0;
-
-// #pragma omp parallel for num_threads(ncores) firstprivate(err_obs, max_u, max_ind, u, log_err_obs, err, c, int_cv, cv, min_cv, sum_cv, start_cv, int_ev, ev, min_ev, sum_ev, start_ev, cwi, lam, j)
-#pragma omp parallel for num_threads(ncores) firstprivate(err_obs, max_u, max_ind, u, log_err_obs, err, cwi, lam, j, ref_dist, s_pois)
+#pragma omp parallel for num_threads(ncores) firstprivate(ui, vi) default(none) shared(s, out_matrix)
   for(int i = 0; i < N; ++i) {
-
-    // Derive the indices to check in this case
-    obs_diff = V[index[i]-1] - U[index[i]-1];
-
-    // Reset variables
-    // sum_cv = 0;
-    // sum_ev = 0;
-
-    // Calculate welfare at the observed point
-    // c = (-obs_util[i] + h[index[i]-1]);
-    // int_cv = -b[index[i]-1]/(2*a[i]) + sqrt(b[index[i]-1]*b[index[i]-1] - 4*a[i]*c)/(2*a[i]*sw_cv[index[i]-1]);
-    // start_cv = (int_cv + fc[index[i]-1])*5200*inflator[i] - sub_alt_disp[index[i]-1];
-
-    // c = (-alt_obs_util[i] + h[index[i]-1]);
-    // int_ev = -b[index[i]-1]/(2*a[i]) + sqrt(b[index[i]-1]*b[index[i]-1] - 4*a[i]*c)/(2*a[i]*sw_ev[index[i]-1]);
-    // start_ev = sub_disp[index[i]-1] - (int_ev + fc[index[i]-1])*5200*inflator[i];
-
-    // Extract the cumulative probabilties and lambda
-    for (int j = 0; j < M - 1; ++j){
-      cwi[j] = cw[i + (j+1)*N];
+    
+    // Extract the utility so we can mess with it later
+    for (int j = 0; j < M; ++j){
+      ui[j] = U[i + j*N];
+      vi[j] = V[i + j*N];
     }
+    
+    std::vector<float> cwi(M - 1);
+    std::vector<int> ref_dist(max_choices);
     
     for (int it = 0; it < iters; ++it){
       
+      int index = in_matrix[i + N*it];
+      float du = ui[index];
+      
+      for (int j = 0; j < M; ++j){
+        ui[j] -= du;
+        vi[j] -= du;
+      }
+      
+      float obs_diff = vi[index] - ui[index];
+      
+      // Extract the cumulative probabilities and lambda
+      // Need to generalise so the index is excluded
+      int kc = 0;
+      float diff_prob = 0;
+      for (int j = 0; j < M; ++j){
+        if (j == 0 && j != index){
+          // Hot-swap the probability of the replacement option
+          cwi[0] = cw[i + index*N] - cw[i + (index - 1)*N];
+          diff_prob = cwi[0];
+          kc++;
+          continue;
+        }
+        if (j == index) continue;
+        kc++;
+        cwi[kc] = cw[i + j*N] + ((j < index) ? diff_prob : 0);
+      }
+      
       // Need to determine sampled utility and s_v here
       // Sample the number of choices from the Poisson
-      lam = cpois(lambda[i], s[i][0], s[i][1]);
+      // Limit to max choices to avoid computational issues
+      int lam = cpois(lambda[i], s[2*i], s[2*i + 1]);
+      lam = (lam > max_choices) ? max_choices : lam;
       // Sample from the NN reference distribution
-      s_pois = 1;
+      float s_pois = 1;
       for (int k = 0; k < lam; ++k){
-        ref_dist[k] = 1 + ws(cwi, s[i][0], s[i][1]);
-        s_pois += exp(U[i + ref_dist[k]]);
+        ref_dist[k] = ws(cwi, s[2*i], s[2*i + 1]);
+        ref_dist[k] += ((ref_dist[k] >= index) ? 1 : 0);
+        s_pois += exp(ui[ref_dist[k]]);
       }
       s_pois = 1/s_pois;
-
+      
       // Calculate the error at the observed point
-      err_obs = -s_pois*fastlog((float) to_double(next(s[i][0], s[i][1])));
-      log_err_obs = -fastlog(err_obs);
-      max_u = V[index[i]-1] + log_err_obs;
-      max_ind = index[i]-1;
-
-      // min_cv = start_cv;
-      // min_ev = start_ev;
-
+      float err_obs = -s_pois*log(to_double(next(s[2*i], s[2*i + 1])));
+      float max_u = vi[index] - log(err_obs);
+      int max_ind = index;
+      
       // Calculate the error at the remaining points
+      float err = 0;
       for (int k = 0; k < lam; ++k){
+
+        // Get index for this iteration
+        int choice = ref_dist[k];
         
-        // Get index j for this iteration - FIX
-        j = ref_dist[k];
-
-        if (V[i + N*j] - U[i + N*j] <= obs_diff) continue;
-
-        err = - fastlog(- fastlog((float) to_double(next(s[i][0], s[i][1]))) + EU[i + N*j] * err_obs);
-        u = V[i + N*j] + err;
-
-        if (V[i + N*j] - U[i + N*j] > obs_diff && u > max_u){
-          max_u = u;
-          max_ind = i + N*j;
+        if (vi[choice] - ui[choice] <= obs_diff) continue;
+        
+        err = - log(- log(to_double(next(s[2*i], s[2*i + 1]))) + exp(ui[choice])* err_obs);
+        
+        if (vi[choice] + err > max_u){
+          max_u = vi[choice] + err;
+          max_ind = choice;
         }
-
-        /*
-        // Welfare calculation
-        err = err + fastlog(err_obs);
-        c = (-obs_util[i] + err + h[i + N*j]);
-
-        if (b[i + N*j]*b[i + N*j] - 4*a[i]*c > 0){
-          int_cv = -b[i + N*j]/(2*a[i]) + sqrt(b[i + N*j]*b[i + N*j] - 4*a[i]*c)/(2*a[i]*sw_cv[i + N*j]);
-          cv = (int_cv + fc[i + N*j])*5200*inflator[i] - sub_alt_disp[i + N*j];
-          if (cv < min_cv){
-            min_cv = cv;
-          }
-        }
-
-        c = (-alt_obs_util[i] + err + h[i + N*j]);
-
-        if (b[i + N*j]*b[i + N*j] - 4*a[i]*c > 0){
-          int_ev = -b[i + N*j]/(2*a[i]) + sqrt(b[i + N*j]*b[i + N*j] - 4*a[i]*c)/(2*a[i]*sw_ev[i + N*j]);
-          ev = sub_disp[i + N*j] - (int_ev + fc[i + N*j])*5200*inflator[i];
-          if (ev > min_ev){
-            min_ev = ev;
-          }
-        }
-        */
-
+        
       }
-
-      // Update the output
-      out[max_ind] += 1;
-      // sum_cv += min_cv;
-      // sum_ev += min_ev;
-      // Save the disposable income for this scenario
-      disp_matrix[i + it*N] = sub_alt_disp[max_ind];
+      
+      // Save the results (by reference)
+      out_matrix[i + it*N] = max_ind;
     }
-
-    // CV[i] = sum_cv/iters;
-    // EV[i] = sum_ev/iters;
+    
   }
-
 }
 
 
