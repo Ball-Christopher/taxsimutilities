@@ -166,7 +166,7 @@ void run_sim_cpp_parallel(const int iters,
       // Need to generalise so the index is excluded
       int kc = 0;
       float diff_prob = 0;
-      for (int j = 0; j < M; ++j){
+      for (int j = 0; j < M - 1; ++j){
         if (j == 0 && j != index){
           // Hot-swap the probability of the replacement option
           cwi[0] = cw[i + index*N] - cw[i + (index - 1)*N];
