@@ -163,20 +163,29 @@ void run_sim_cpp_parallel(const int iters,
       float obs_diff = vi[index] - ui[index];
       
       // Extract the cumulative probabilities and lambda
-      // Need to generalise so the index is excluded
-      int kc = 0;
+      
+      /* 
+       * The next for loop is easily the nastiest section of the entire simulations.
+       * I ended up rewriting from scratch in Julia as a cross-check and
+       * found some issues.  The latest version seems like it works...
+       */
       float diff_prob = 0;
-      for (int j = 0; j < M - 1; ++j){
+      if (index > 0){
+        diff_prob = cw[i + (index - 1)*N] - 
+          (index > 1 ? cw[i + (index - 2)*N] : 0);
+      }
+
+      int mod_j = 0;
+      for (int j = 0; j < M; ++j){
         if (j == 0 && j != index){
           // Hot-swap the probability of the replacement option
-          cwi[0] = cw[i + index*N] - cw[i + (index - 1)*N];
-          diff_prob = cwi[0];
-          kc++;
+          cwi[0] = diff_prob;
           continue;
         }
         if (j == index) continue;
-        kc++;
-        cwi[kc] = cw[i + j*N] + ((j < index) ? diff_prob : 0);
+        mod_j = (j < index) ? j : (j - 1);
+        cwi[mod_j] = cw[i + (j - 1)*N] + 
+          ((j < index) ? diff_prob : 0);
       }
       
       // Need to determine sampled utility and s_v here
@@ -186,12 +195,27 @@ void run_sim_cpp_parallel(const int iters,
       lam = (lam > max_choices) ? max_choices : lam;
       // Sample from the NN reference distribution
       float s_pois = 1;
+      int exc_count = 0;
+      int inc_count = 0;
+      int test = 0;
+      
       for (int k = 0; k < lam; ++k){
-        ref_dist[k] = ws(cwi, s[2*i], s[2*i + 1]);
-        ref_dist[k] += ((ref_dist[k] >= index) ? 1 : 0);
-        s_pois += exp(ui[ref_dist[k]]);
+        
+        test = ws(cwi, s[2*i], s[2*i + 1]);
+        test += ((ref_dist[inc_count] >= index) ? 1 : 0);
+        
+        if (vi[test] - ui[test] <= obs_diff){
+          exc_count++;
+          continue;
+        }
+        
+        ref_dist[inc_count] = test;
+        inc_count++;
+        
+        s_pois += exp(ui[ref_dist[inc_count]]);
       }
-      s_pois = 1/s_pois;
+      lam -= exc_count;
+      s_pois = 1.0/s_pois;
       
       // Calculate the error at the observed point
       float err_obs = -s_pois*log(to_double(next(s[2*i], s[2*i + 1])));
@@ -204,8 +228,6 @@ void run_sim_cpp_parallel(const int iters,
 
         // Get index for this iteration
         int choice = ref_dist[k];
-        
-        if (vi[choice] - ui[choice] <= obs_diff) continue;
         
         err = - log(- log(to_double(next(s[2*i], s[2*i + 1]))) + exp(ui[choice])* err_obs);
         
