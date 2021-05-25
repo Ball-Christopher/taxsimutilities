@@ -242,6 +242,133 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// test_int
+NumericVector test_int(NumericVector x, NumericVector y);
+RcppExport SEXP _taxsimutilities_test_int(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(test_int(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_intm
+void test_intm(const std::vector<float> x, const std::vector<float> y, NumericMatrix integral, const int M, const int N, const int ncores);
+RcppExport SEXP _taxsimutilities_test_intm(SEXP xSEXP, SEXP ySEXP, SEXP integralSEXP, SEXP MSEXP, SEXP NSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::traits::input_parameter< const std::vector<float> >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const std::vector<float> >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type integral(integralSEXP);
+    Rcpp::traits::input_parameter< const int >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
+    test_intm(x, y, integral, M, N, ncores);
+    return R_NilValue;
+END_RCPP
+}
+// stable_point
+Rcpp::NumericMatrix stable_point(const Rcpp::NumericMatrix U, const Rcpp::NumericMatrix w);
+RcppExport SEXP _taxsimutilities_stable_point(SEXP USEXP, SEXP wSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type U(USEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type w(wSEXP);
+    rcpp_result_gen = Rcpp::wrap(stable_point(U, w));
+    return rcpp_result_gen;
+END_RCPP
+}
+// stable_pointv
+Rcpp::NumericVector stable_pointv(const Rcpp::NumericVector U, const Rcpp::NumericVector w);
+RcppExport SEXP _taxsimutilities_stable_pointv(SEXP USEXP, SEXP wSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type U(USEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type w(wSEXP);
+    rcpp_result_gen = Rcpp::wrap(stable_pointv(U, w));
+    return rcpp_result_gen;
+END_RCPP
+}
+// int_optv
+double int_optv(const Rcpp::NumericVector re, const int row, const Rcpp::NumericMatrix hrs, const Rcpp::NumericMatrix disp, const Rcpp::NumericMatrix tw, const Rcpp::NumericVector mn, const Rcpp::NumericVector std);
+RcppExport SEXP _taxsimutilities_int_optv(SEXP reSEXP, SEXP rowSEXP, SEXP hrsSEXP, SEXP dispSEXP, SEXP twSEXP, SEXP mnSEXP, SEXP stdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type re(reSEXP);
+    Rcpp::traits::input_parameter< const int >::type row(rowSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type hrs(hrsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type disp(dispSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type tw(twSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type mn(mnSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type std(stdSEXP);
+    rcpp_result_gen = Rcpp::wrap(int_optv(re, row, hrs, disp, tw, mn, std));
+    return rcpp_result_gen;
+END_RCPP
+}
+// int_optrc
+double int_optrc(const Rcpp::NumericVector re, const Rcpp::NumericVector hrs1, const Rcpp::NumericVector hrs2, const Rcpp::NumericVector disp, const Rcpp::NumericVector tw, const Rcpp::NumericVector mn);
+RcppExport SEXP _taxsimutilities_int_optrc(SEXP reSEXP, SEXP hrs1SEXP, SEXP hrs2SEXP, SEXP dispSEXP, SEXP twSEXP, SEXP mnSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type re(reSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type hrs1(hrs1SEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type hrs2(hrs2SEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type disp(dispSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type tw(twSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type mn(mnSEXP);
+    rcpp_result_gen = Rcpp::wrap(int_optrc(re, hrs1, hrs2, disp, tw, mn));
+    return rcpp_result_gen;
+END_RCPP
+}
+// int_optr
+double int_optr(const Rcpp::NumericVector re, const Rcpp::NumericVector hrs, const Rcpp::NumericVector disp, const Rcpp::NumericVector tw, const Rcpp::NumericVector mn);
+RcppExport SEXP _taxsimutilities_int_optr(SEXP reSEXP, SEXP hrsSEXP, SEXP dispSEXP, SEXP twSEXP, SEXP mnSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type re(reSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type hrs(hrsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type disp(dispSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type tw(twSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type mn(mnSEXP);
+    rcpp_result_gen = Rcpp::wrap(int_optr(re, hrs, disp, tw, mn));
+    return rcpp_result_gen;
+END_RCPP
+}
+// recalc_quants
+void recalc_quants(NumericMatrix optp, const Rcpp::NumericMatrix hrs, const Rcpp::NumericMatrix disp, const Rcpp::NumericMatrix tw, const Rcpp::NumericVector mn, const int N, const int M);
+RcppExport SEXP _taxsimutilities_recalc_quants(SEXP optpSEXP, SEXP hrsSEXP, SEXP dispSEXP, SEXP twSEXP, SEXP mnSEXP, SEXP NSEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::traits::input_parameter< NumericMatrix >::type optp(optpSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type hrs(hrsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type disp(dispSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type tw(twSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type mn(mnSEXP);
+    Rcpp::traits::input_parameter< const int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int >::type M(MSEXP);
+    recalc_quants(optp, hrs, disp, tw, mn, N, M);
+    return R_NilValue;
+END_RCPP
+}
+// int_optvc
+double int_optvc(const Rcpp::NumericVector re, const int row, const Rcpp::NumericVector h1, const Rcpp::NumericMatrix hrs1, const Rcpp::NumericVector h2, const Rcpp::NumericMatrix hrs2, const Rcpp::NumericVector y1, const Rcpp::NumericMatrix disp, const Rcpp::NumericMatrix tw, const Rcpp::NumericVector mn, const Rcpp::NumericVector std);
+RcppExport SEXP _taxsimutilities_int_optvc(SEXP reSEXP, SEXP rowSEXP, SEXP h1SEXP, SEXP hrs1SEXP, SEXP h2SEXP, SEXP hrs2SEXP, SEXP y1SEXP, SEXP dispSEXP, SEXP twSEXP, SEXP mnSEXP, SEXP stdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type re(reSEXP);
+    Rcpp::traits::input_parameter< const int >::type row(rowSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type h1(h1SEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type hrs1(hrs1SEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type h2(h2SEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type hrs2(hrs2SEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type y1(y1SEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type disp(dispSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type tw(twSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type mn(mnSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type std(stdSEXP);
+    rcpp_result_gen = Rcpp::wrap(int_optvc(re, row, h1, hrs1, h2, hrs2, y1, disp, tw, mn, std));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_taxsimutilities_greg_cpp_one", (DL_FUNC) &_taxsimutilities_greg_cpp_one, 3},
@@ -262,6 +389,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_taxsimutilities_atkinson_e", (DL_FUNC) &_taxsimutilities_atkinson_e, 3},
     {"_taxsimutilities_greg_cpp", (DL_FUNC) &_taxsimutilities_greg_cpp, 5},
     {"_taxsimutilities_run_sim_cpp_parallel", (DL_FUNC) &_taxsimutilities_run_sim_cpp_parallel, 12},
+    {"_taxsimutilities_test_int", (DL_FUNC) &_taxsimutilities_test_int, 2},
+    {"_taxsimutilities_test_intm", (DL_FUNC) &_taxsimutilities_test_intm, 6},
+    {"_taxsimutilities_stable_point", (DL_FUNC) &_taxsimutilities_stable_point, 2},
+    {"_taxsimutilities_stable_pointv", (DL_FUNC) &_taxsimutilities_stable_pointv, 2},
+    {"_taxsimutilities_int_optv", (DL_FUNC) &_taxsimutilities_int_optv, 7},
+    {"_taxsimutilities_int_optrc", (DL_FUNC) &_taxsimutilities_int_optrc, 6},
+    {"_taxsimutilities_int_optr", (DL_FUNC) &_taxsimutilities_int_optr, 5},
+    {"_taxsimutilities_recalc_quants", (DL_FUNC) &_taxsimutilities_recalc_quants, 7},
+    {"_taxsimutilities_int_optvc", (DL_FUNC) &_taxsimutilities_int_optvc, 11},
     {NULL, NULL, 0}
 };
 

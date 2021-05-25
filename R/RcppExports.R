@@ -73,3 +73,39 @@ run_sim_cpp_parallel <- function(iters, M, N, in_matrix, U, V, ID, out_matrix, c
     invisible(.Call(`_taxsimutilities_run_sim_cpp_parallel`, iters, M, N, in_matrix, U, V, ID, out_matrix, cw, lambda, ncores, seed))
 }
 
+test_int <- function(x, y) {
+    .Call(`_taxsimutilities_test_int`, x, y)
+}
+
+test_intm <- function(x, y, integral, M, N, ncores) {
+    invisible(.Call(`_taxsimutilities_test_intm`, x, y, integral, M, N, ncores))
+}
+
+stable_point <- function(U, w) {
+    .Call(`_taxsimutilities_stable_point`, U, w)
+}
+
+stable_pointv <- function(U, w) {
+    .Call(`_taxsimutilities_stable_pointv`, U, w)
+}
+
+int_optv <- function(re, row, hrs, disp, tw, mn, std) {
+    .Call(`_taxsimutilities_int_optv`, re, row, hrs, disp, tw, mn, std)
+}
+
+int_optrc <- function(re, hrs1, hrs2, disp, tw, mn) {
+    .Call(`_taxsimutilities_int_optrc`, re, hrs1, hrs2, disp, tw, mn)
+}
+
+int_optr <- function(re, hrs, disp, tw, mn) {
+    .Call(`_taxsimutilities_int_optr`, re, hrs, disp, tw, mn)
+}
+
+recalc_quants <- function(optp, hrs, disp, tw, mn, N, M) {
+    invisible(.Call(`_taxsimutilities_recalc_quants`, optp, hrs, disp, tw, mn, N, M))
+}
+
+int_optvc <- function(re, row, h1, hrs1, h2, hrs2, y1, disp, tw, mn, std) {
+    .Call(`_taxsimutilities_int_optvc`, re, row, h1, hrs1, h2, hrs2, y1, disp, tw, mn, std)
+}
+
