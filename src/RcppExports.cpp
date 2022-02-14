@@ -295,8 +295,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // int_optv
-double int_optv(const Rcpp::NumericVector re, const int row, const Rcpp::NumericMatrix hrs, const Rcpp::NumericMatrix disp, const Rcpp::NumericMatrix tw, const Rcpp::NumericVector mn, const Rcpp::NumericVector std);
-RcppExport SEXP _taxsimutilities_int_optv(SEXP reSEXP, SEXP rowSEXP, SEXP hrsSEXP, SEXP dispSEXP, SEXP twSEXP, SEXP mnSEXP, SEXP stdSEXP) {
+double int_optv(const Rcpp::NumericVector re, const int row, const Rcpp::NumericMatrix hrs, const Rcpp::NumericMatrix disp, const Rcpp::NumericMatrix tw, const Rcpp::NumericVector mn, const Rcpp::NumericVector sdv);
+RcppExport SEXP _taxsimutilities_int_optv(SEXP reSEXP, SEXP rowSEXP, SEXP hrsSEXP, SEXP dispSEXP, SEXP twSEXP, SEXP mnSEXP, SEXP sdvSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type re(reSEXP);
@@ -305,8 +305,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type disp(dispSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type tw(twSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type mn(mnSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type std(stdSEXP);
-    rcpp_result_gen = Rcpp::wrap(int_optv(re, row, hrs, disp, tw, mn, std));
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type sdv(sdvSEXP);
+    rcpp_result_gen = Rcpp::wrap(int_optv(re, row, hrs, disp, tw, mn, sdv));
     return rcpp_result_gen;
 END_RCPP
 }

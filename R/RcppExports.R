@@ -89,8 +89,8 @@ stable_pointv <- function(U, w) {
     .Call(`_taxsimutilities_stable_pointv`, U, w)
 }
 
-int_optv <- function(re, row, hrs, disp, tw, mn, std) {
-    .Call(`_taxsimutilities_int_optv`, re, row, hrs, disp, tw, mn, std)
+int_optv <- function(re, row, hrs, disp, tw, mn, sdv) {
+    .Call(`_taxsimutilities_int_optv`, re, row, hrs, disp, tw, mn, sdv)
 }
 
 int_optrc <- function(re, hrs1, hrs2, disp, tw, mn) {

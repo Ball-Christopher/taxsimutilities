@@ -693,11 +693,11 @@ Rcpp::NumericMatrix stable_point(
   
   NumericMatrix out( nrows , ncols );
   
-  double swu = 0.0;
-  double n = 0.0;
-  double last_p = 100.0;
-  double last_n = 0.0;
-  double sw = 0.0;
+  double swu = 0;
+  double n = 0;
+  double last_p = 100;
+  double last_n = 0;
+  double sw = 0;
   // double wf = 0;
   int iterations = 0;
   
@@ -734,13 +734,13 @@ Rcpp::NumericMatrix stable_point(
     
     // Rcout << "The value of k : " << n << "\n";
     
-    last_p = 100.0;
-    last_n = 0.0;
+    last_p = 100;
+    last_n = 0;
     
     iterations = 0;
     while (iterations < 10 &&
-           (abs(last_p - p(0)) > 0.00001 ||
-           abs(last_n - n) > 0.0001)){
+           (fabs(last_p - p(0)) > 0.00001 ||
+           fabs(last_n - n) > 0.0001)){
       last_n = n;
       last_p = p(0);
       iterations++;
@@ -806,12 +806,12 @@ Rcpp::NumericVector stable_pointv(
   Rcpp::NumericVector p(ncols);
   Rcpp::NumericVector W(ncols);
   
-  double swu = 0.0;
-  double n = 0.0;
-  double last_p = 100.0;
-  double last_n = 0.0;
-  double sw = 0.0;
-  int iterations = 0.0;
+  double swu = 0;
+  double n = 0;
+  double last_p = 100;
+  double last_n = 0;
+  double sw = 0;
+  int iterations = 0;
   
   
   swu = 0.0;
@@ -842,13 +842,13 @@ Rcpp::NumericVector stable_pointv(
   
   // Rcout << "The value of k : " << n << "\n";
   
-  last_p = 100.0;
-  last_n = 0.0;
+  last_p = 100;
+  last_n = 0;
   
   iterations = 0;
   while (iterations < 10 &&
-         (abs(last_p - p(0)) > 0.00001 ||
-         abs(last_n - n) > 0.0001)){
+         (fabs(last_p - p(0)) > 0.00001 ||
+         fabs(last_n - n) > 0.0001)){
     last_n = n;
     last_p = p(0);
     iterations++;
@@ -907,7 +907,7 @@ double int_optv(
     const Rcpp::NumericMatrix hrs, 
     const Rcpp::NumericMatrix disp,
     const Rcpp::NumericMatrix tw, const Rcpp::NumericVector mn,
-    const Rcpp::NumericVector std
+    const Rcpp::NumericVector sdv
 ){
   // Calculate deriviatives
   NumericVector dh = re(0) + 2*re(1)*hrs.row(row - 1) + re(4)*disp.row(row - 1);
@@ -915,18 +915,25 @@ double int_optv(
   
   int ncols = hrs.ncol();
   Rcpp::NumericVector utils(ncols);
+  Rcpp::NumericVector u(ncols);
+  double umax = 0;
   
   for (int j = 0; j < ncols; ++j){
-    utils(j) = exp(re(0)*hrs(row - 1, j) + 
+    u(j) = re(0)*hrs(row - 1, j) + 
       re(1)*hrs(row - 1, j)*hrs(row - 1, j) +
       re(2)*disp(row - 1, j) + 
       re(3)*disp(row - 1, j)*disp(row - 1, j) +
-      re(4)*disp(row - 1, j)*hrs(row - 1, j));
+      re(4)*disp(row - 1, j)*hrs(row - 1, j);
+	 if (j == 0 || u(j) > umax) umax = u(j);
+  }
+  
+  for (int j = 0; j < ncols; ++j){
+	 utils(j) = exp(u(j) - umax);
   }
   
   Rcpp::NumericVector probs = stable_pointv(utils, tw.row(row - 1));
   
-  double sc = sum((re-mn)*(re-mn)); 
+  double sc = sum((re-mn)*(re-mn)/sdv); 
   
   return(-(sum(dh < 0) + sum(dy > 0))/ncols*sqrt(probs(0)/sum(probs*probs)) + sc);
 }
