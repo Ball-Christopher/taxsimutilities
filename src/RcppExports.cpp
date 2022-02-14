@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // greg_cpp_one
 arma::mat greg_cpp_one(arma::colvec W, arma::mat& C, arma::vec& B);
 RcppExport SEXP _taxsimutilities_greg_cpp_one(SEXP WSEXP, SEXP CSEXP, SEXP BSEXP) {
@@ -223,19 +228,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // run_sim_cpp_parallel
-void run_sim_cpp_parallel(const int iters, const int M, const int N, const std::vector<int> in_matrix, const std::vector<float> U, const std::vector<float> V, const std::vector<int> ID, NumericMatrix out_matrix, const std::vector<float> cw, const std::vector<float> lambda, const int ncores, const int seed);
+void run_sim_cpp_parallel(const int iters, const int M, const int N, const std::vector<int> in_matrix, const std::vector<double> U, const std::vector<double> V, const std::vector<int> ID, NumericMatrix out_matrix, const std::vector<double> cw, const std::vector<double> lambda, const int ncores, const int seed);
 RcppExport SEXP _taxsimutilities_run_sim_cpp_parallel(SEXP itersSEXP, SEXP MSEXP, SEXP NSEXP, SEXP in_matrixSEXP, SEXP USEXP, SEXP VSEXP, SEXP IDSEXP, SEXP out_matrixSEXP, SEXP cwSEXP, SEXP lambdaSEXP, SEXP ncoresSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type iters(itersSEXP);
     Rcpp::traits::input_parameter< const int >::type M(MSEXP);
     Rcpp::traits::input_parameter< const int >::type N(NSEXP);
     Rcpp::traits::input_parameter< const std::vector<int> >::type in_matrix(in_matrixSEXP);
-    Rcpp::traits::input_parameter< const std::vector<float> >::type U(USEXP);
-    Rcpp::traits::input_parameter< const std::vector<float> >::type V(VSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double> >::type U(USEXP);
+    Rcpp::traits::input_parameter< const std::vector<double> >::type V(VSEXP);
     Rcpp::traits::input_parameter< const std::vector<int> >::type ID(IDSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type out_matrix(out_matrixSEXP);
-    Rcpp::traits::input_parameter< const std::vector<float> >::type cw(cwSEXP);
-    Rcpp::traits::input_parameter< const std::vector<float> >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double> >::type cw(cwSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double> >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< const int >::type ncores(ncoresSEXP);
     Rcpp::traits::input_parameter< const int >::type seed(seedSEXP);
     run_sim_cpp_parallel(iters, M, N, in_matrix, U, V, ID, out_matrix, cw, lambda, ncores, seed);
