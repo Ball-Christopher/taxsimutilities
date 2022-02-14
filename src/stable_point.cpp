@@ -693,11 +693,11 @@ Rcpp::NumericMatrix stable_point(
   
   NumericMatrix out( nrows , ncols );
   
-  double swu = 0;
-  double n = 0;
-  double last_p = 100;
-  double last_n = 0;
-  double sw = 0;
+  double swu = 0.0;
+  double n = 0.0;
+  double last_p = 100.0;
+  double last_n = 0.0;
+  double sw = 0.0;
   // double wf = 0;
   int iterations = 0;
   
@@ -734,8 +734,8 @@ Rcpp::NumericMatrix stable_point(
     
     // Rcout << "The value of k : " << n << "\n";
     
-    last_p = 100;
-    last_n = 0;
+    last_p = 100.0;
+    last_n = 0.0;
     
     iterations = 0;
     while (iterations < 10 &&
