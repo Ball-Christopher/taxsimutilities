@@ -1,7 +1,4 @@
 #include <RcppArmadillo.h>  
-#include <stdint.h>
-#include <float.h>
-#include <math.h>
 
 
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -581,7 +578,7 @@ private:
       
       // difference in consecutive integral estimates
       previousDelta = currentDelta;
-      currentDelta = std::abs(0.5*integral - newContribution); 
+      currentDelta = fabs(0.5*integral - newContribution); 
       integral = 0.5*integral + newContribution;
       
       // Once convergence kicks in, error is approximately squared at each step.
@@ -739,8 +736,8 @@ Rcpp::NumericMatrix stable_point(
     
     iterations = 0;
     while (iterations < 10 &&
-           (std::abs(last_p - p(0)) > 0.00001 ||
-           std::abs(last_n - n) > 0.0001)){
+           (fabs(1.0*last_p - 1.0*p(0)) > 0.00001 ||
+           fabs(1.0*last_n - 1.0*n) > 0.0001)){
       last_n = n;
       last_p = p(0);
       iterations++;
@@ -847,8 +844,8 @@ Rcpp::NumericVector stable_pointv(
   
   iterations = 0;
   while (iterations < 10 &&
-         (std::abs(last_p - p(0)) > 0.00001 ||
-         std::abs(last_n - n) > 0.0001)){
+         (fabs(1.0*last_p - 1.0*p(0)) > 0.00001 ||
+         fabs(1.0*last_n - 1.0*n) > 0.0001)){
     last_n = n;
     last_p = p(0);
     iterations++;
