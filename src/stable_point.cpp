@@ -1,7 +1,4 @@
 #include <RcppArmadillo.h>  
-#include <stdint.h>
-#include <float.h>
-#include <cmath>
 
 
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -701,6 +698,9 @@ Rcpp::NumericMatrix stable_point(
   // double wf = 0;
   int iterations = 0;
   
+  double diff_p = last_p;
+  double diff_n = last_n;
+  
   for (int k = 0; k < nrows; ++k){
     
     // Rcout << "The value of k : " << k << "\n";
@@ -736,11 +736,12 @@ Rcpp::NumericMatrix stable_point(
     
     last_p = 100.0;
     last_n = 0.0;
+	diff_p = last_p;
+	diff_n = last_n;
     
     iterations = 0;
     while (iterations < 10 &&
-           (fabs(last_p - p(0)) > 0.00001 ||
-           fabs(last_n - n) > 0.0001)){
+           (diff_p > 0.00001 || diff_n > 0.0001)){
       last_n = n;
       last_p = p(0);
       iterations++;
@@ -786,6 +787,9 @@ Rcpp::NumericMatrix stable_point(
         n += p(j)*p(j);
       }
       n = 1.0/n;
+	  
+	  diff_p = (last_p > p(0)) ? (last_p - p(0)) : (p(0) - last_p);
+	  diff_n = (last_n > n) ? (last_n - n) : (n - last_n);
     }
     
     out.row(k) = p;
@@ -847,8 +851,8 @@ Rcpp::NumericVector stable_pointv(
   
   iterations = 0;
   while (iterations < 10 &&
-         (fabs(last_p - p(0)) > 0.00001 ||
-         fabs(last_n - n) > 0.0001)){
+         (fabs(1.0*last_p - 1.0*p(0)) > 0.00001 ||
+         fabs(1.0*last_n - 1.0*n) > 0.0001)){
     last_n = n;
     last_p = p(0);
     iterations++;
