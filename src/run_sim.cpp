@@ -126,6 +126,7 @@ static inline int
     return(k - 1);
   }
 
+//' @export
 // [[Rcpp::export(rng = false)]]
 void run_sim_cpp_parallel(const int iters, 
                           const int M, const int N,

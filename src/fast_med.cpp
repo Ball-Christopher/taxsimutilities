@@ -13,6 +13,7 @@ using namespace Rcpp;
 #include <omp.h>
 #endif
 
+//' @export
 // [[Rcpp::export]]
 double gini_sorted(const std::vector<double> y,
                    const std::vector<double> w) {
@@ -38,6 +39,7 @@ double gini_sorted(const std::vector<double> y,
   return gini;
 }
 
+//' @export
 // [[Rcpp::export]]
 NumericMatrix fast_poverty(const std::vector<double> y,
                            const std::vector<double> w,
@@ -201,6 +203,7 @@ NumericMatrix fast_poverty(const std::vector<double> y,
   return out;
 }
 
+//' @export
 // [[Rcpp::export]]
 double fast_med(NumericVector y,
                 NumericVector w) {
@@ -215,6 +218,7 @@ double fast_med(NumericVector y,
   return -1;
 }
 
+//' @export
 // [[Rcpp::export]]
 double fast_pov(NumericVector y,
                 NumericVector w,
@@ -230,6 +234,7 @@ double fast_pov(NumericVector y,
   return -1;
 }
 
+//' @export
 // [[Rcpp::export]]
 double fast_cpov(NumericVector y,
                  NumericVector w,
@@ -246,6 +251,7 @@ double fast_cpov(NumericVector y,
   return -1;
 }
 
+//' @export
 // [[Rcpp::export]]
 double fast_povgap(NumericVector y,
                    NumericVector w,
@@ -265,6 +271,7 @@ double fast_povgap(NumericVector y,
   return -1;
 }
 
+//' @export
 // [[Rcpp::export]]
 double theil_l(NumericVector y,
                NumericVector w) {
@@ -277,6 +284,7 @@ double theil_l(NumericVector y,
   return 1.0/totw*l;
 }
 
+//' @export
 // [[Rcpp::export]]
 double theil_t(NumericVector y,
                NumericVector w) {
@@ -287,6 +295,7 @@ double theil_t(NumericVector y,
   return 1.0/totw*t;
 }
 
+//' @export
 // [[Rcpp::export]]
 double gen_ent(NumericVector y,
                NumericVector w,
@@ -297,6 +306,7 @@ double gen_ent(NumericVector y,
   return 1.0/(a*(a-1))*ge;
 }
 
+//' @export
 // [[Rcpp::export]]
 double atkinson_1(NumericVector y,
                   NumericVector w) {
@@ -309,6 +319,7 @@ double atkinson_1(NumericVector y,
   return 1.0 - atk/ybar;
 }
 
+//' @export
 // [[Rcpp::export]]
 double atkinson_e(NumericVector y,
                   NumericVector w,

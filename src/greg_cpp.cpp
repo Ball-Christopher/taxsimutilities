@@ -15,6 +15,7 @@ using namespace arma;
 //   http://gallery.rcpp.org/
 //
 
+//' @export
 // [[Rcpp::export]]
 arma::mat greg_cpp(arma::colvec W,
                        arma::mat& C,

@@ -1,14 +1,14 @@
 Package: taxsimutilities
 Type: Package
-Title: What the Package Does in One 'Title Case' Line
-Version: 1.0
-Date: 2019-10-30
-Author: Your Name
-Maintainer: Your Name <your@email.com>
-Description: One paragraph description of what the package does as
-       one or more full sentences.
+Title: Utilities for Random Utility Random Opportunity (RURO) discrete choice modesl of labour supply
+Version: 1.1
+Date: 2022-03-05
+Author: Christopher Ball
+Maintainer: Christopher Ball <chrispball1@gmail.com>
+Description: This package provides utilities for Random Utility Random Opportunity (RURO) discrete choice modesl of labour supply.  These include C++ (through Rcpp) functions for estimation, simulation and a range of important functions that are slow in pure R.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.2)
 LinkingTo: Rcpp, RcppArmadillo
 SystemRequirements: C++11
 RoxygenNote: 7.1.2
+Encoding: UTF-8

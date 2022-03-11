@@ -5,6 +5,7 @@ using namespace arma;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 
+//' @export
 // [[Rcpp::export]]
 arma::mat greg_cpp_one(arma::colvec W,
                        arma::mat& C,
@@ -18,6 +19,7 @@ arma::mat greg_cpp_one(arma::colvec W,
   return(W);
 }
 
+//' @export
 // [[Rcpp::export]]
 NumericVector fast_bs_sum(NumericVector pattern) {
   

@@ -646,6 +646,7 @@ void logistic_function::set_pars( double a, double q, double b, double k, double
 
 logistic_function f1;
 
+//' @export
 // [[Rcpp::export(rng = false)]]
 NumericVector test_int(NumericVector x, NumericVector y){
   //logistic_function f1;
@@ -659,6 +660,7 @@ NumericVector test_int(NumericVector x, NumericVector y){
   return(integral);
 }
 
+//' @export
 // [[Rcpp::export(rng = false)]]
 void test_intm(const std::vector<float> x, 
                const std::vector<float> y,
@@ -678,6 +680,7 @@ void test_intm(const std::vector<float> x,
   }
 }
 
+//' @export
 // [[Rcpp::export(rng = false)]]
 Rcpp::NumericMatrix stable_point(
     const Rcpp::NumericMatrix U,
@@ -800,7 +803,7 @@ Rcpp::NumericMatrix stable_point(
   
 }
 
-
+//' @export
 // [[Rcpp::export(rng = false)]]
 Rcpp::NumericVector stable_pointv(
     const Rcpp::NumericVector U,
@@ -904,6 +907,7 @@ Rcpp::NumericVector stable_pointv(
   
 }
 
+//' @export
 // [[Rcpp::export(rng = false)]]
 double int_optv(
     const Rcpp::NumericVector re,
@@ -942,6 +946,7 @@ double int_optv(
   return(-(sum(dh < 0) + sum(dy > 0))/ncols*sqrt(probs(0)/sum(probs*probs)) + sc);
 }
 
+//' @export
 // [[Rcpp::export(rng = false)]]
 double int_optrc(
     const Rcpp::NumericVector re,
@@ -969,6 +974,7 @@ double int_optrc(
   return(-(sum(dh1 < 0) + sum(dh2 < 0) + sum(dy > 0))/ncols*sqrt(probs(0)/sum(probs*probs)) + sc);
 }
 
+//' @export
 // [[Rcpp::export(rng = false)]]
 double int_optr(
     const Rcpp::NumericVector re,
@@ -993,6 +999,7 @@ double int_optr(
   return(-(sum(dh < 0) + sum(dy > 0))/ncols*sqrt(probs(0)/sum(probs*probs)) + sc);
 }
 
+//' @export
 // [[Rcpp::export(rng = false)]]
 void recalc_quants(
     NumericMatrix optp,
@@ -1041,6 +1048,7 @@ void recalc_quants(
   }
 }
 
+//' @export
 // [[Rcpp::export(rng = false)]]
 double int_optvc(
     const Rcpp::NumericVector re,

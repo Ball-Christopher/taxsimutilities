@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+//' @export
 // [[Rcpp::export]]
 NumericVector fast_group_sum(NumericVector x,
                       IntegerVector grp) {
@@ -32,6 +33,7 @@ NumericVector fast_group_sum(NumericVector x,
   return res;
 }
 
+//' @export
 // [[Rcpp::export]]
 NumericVector fast_group_max(NumericVector x,
                              IntegerVector grp) {
@@ -63,6 +65,7 @@ NumericVector fast_group_max(NumericVector x,
   return res;
 }
 
+//' @export
 // [[Rcpp::export]]
 NumericVector fast_group_min(NumericVector x,
                              IntegerVector grp) {

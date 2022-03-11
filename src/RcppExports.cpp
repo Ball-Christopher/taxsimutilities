@@ -35,6 +35,141 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// logSumExp
+double logSumExp(NumericVector& logV, int accumulators);
+RcppExport SEXP _taxsimutilities_logSumExp(SEXP logVSEXP, SEXP accumulatorsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type logV(logVSEXP);
+    Rcpp::traits::input_parameter< int >::type accumulators(accumulatorsSEXP);
+    rcpp_result_gen = Rcpp::wrap(logSumExp(logV, accumulators));
+    return rcpp_result_gen;
+END_RCPP
+}
+// stable_ig
+NumericVector stable_ig(const NumericMatrix U, const NumericMatrix W, const int N, const int M);
+RcppExport SEXP _taxsimutilities_stable_ig(SEXP USEXP, SEXP WSEXP, SEXP NSEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix >::type U(USEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type W(WSEXP);
+    Rcpp::traits::input_parameter< const int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(stable_ig(U, W, N, M));
+    return rcpp_result_gen;
+END_RCPP
+}
+// stable_n
+NumericVector stable_n(const NumericMatrix U, const NumericMatrix W, const int N, const int M);
+RcppExport SEXP _taxsimutilities_stable_n(SEXP USEXP, SEXP WSEXP, SEXP NSEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix >::type U(USEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type W(WSEXP);
+    Rcpp::traits::input_parameter< const int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(stable_n(U, W, N, M));
+    return rcpp_result_gen;
+END_RCPP
+}
+// stable_p
+NumericVector stable_p(const NumericMatrix U, const NumericMatrix W, const int N, const int M);
+RcppExport SEXP _taxsimutilities_stable_p(SEXP USEXP, SEXP WSEXP, SEXP NSEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix >::type U(USEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type W(WSEXP);
+    Rcpp::traits::input_parameter< const int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(stable_p(U, W, N, M));
+    return rcpp_result_gen;
+END_RCPP
+}
+// llc_cpp
+double llc_cpp(const NumericVector p, const NumericMatrix H1, const NumericMatrix H2, const NumericMatrix H1sq, const NumericMatrix H2sq, const NumericMatrix H1H2, const NumericMatrix Y, const NumericMatrix H1Y, const NumericMatrix H2Y, const NumericMatrix Ysq, const NumericMatrix TW, const NumericVector nw, const int& N, const int& M);
+RcppExport SEXP _taxsimutilities_llc_cpp(SEXP pSEXP, SEXP H1SEXP, SEXP H2SEXP, SEXP H1sqSEXP, SEXP H2sqSEXP, SEXP H1H2SEXP, SEXP YSEXP, SEXP H1YSEXP, SEXP H2YSEXP, SEXP YsqSEXP, SEXP TWSEXP, SEXP nwSEXP, SEXP NSEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const NumericVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H1(H1SEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H2(H2SEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H1sq(H1sqSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H2sq(H2sqSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H1H2(H1H2SEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H1Y(H1YSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H2Y(H2YSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Ysq(YsqSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type TW(TWSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type nw(nwSEXP);
+    Rcpp::traits::input_parameter< const int& >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int& >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(llc_cpp(p, H1, H2, H1sq, H2sq, H1H2, Y, H1Y, H2Y, Ysq, TW, nw, N, M));
+    return rcpp_result_gen;
+END_RCPP
+}
+// llc_alt_cpp
+double llc_alt_cpp(const SEXP p, const SEXP H1, const SEXP H2, const SEXP H1sq, const SEXP H2sq, const SEXP H1H2, const SEXP Y, const SEXP H1Y, const SEXP H2Y, const SEXP Ysq, const SEXP lTW, const SEXP nw, const int& N, const int& M);
+RcppExport SEXP _taxsimutilities_llc_alt_cpp(SEXP pSEXP, SEXP H1SEXP, SEXP H2SEXP, SEXP H1sqSEXP, SEXP H2sqSEXP, SEXP H1H2SEXP, SEXP YSEXP, SEXP H1YSEXP, SEXP H2YSEXP, SEXP YsqSEXP, SEXP lTWSEXP, SEXP nwSEXP, SEXP NSEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const SEXP >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type H1(H1SEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type H2(H2SEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type H1sq(H1sqSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type H2sq(H2sqSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type H1H2(H1H2SEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type H1Y(H1YSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type H2Y(H2YSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type Ysq(YsqSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type lTW(lTWSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type nw(nwSEXP);
+    Rcpp::traits::input_parameter< const int& >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int& >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(llc_alt_cpp(p, H1, H2, H1sq, H2sq, H1H2, Y, H1Y, H2Y, Ysq, lTW, nw, N, M));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lls_cpp
+double lls_cpp(const NumericVector p, const NumericMatrix H, const NumericMatrix Hsq, const NumericMatrix Y, const NumericMatrix Ysq, const NumericMatrix HY, const NumericMatrix TW, const NumericVector nw, const int& N, const int& M);
+RcppExport SEXP _taxsimutilities_lls_cpp(SEXP pSEXP, SEXP HSEXP, SEXP HsqSEXP, SEXP YSEXP, SEXP YsqSEXP, SEXP HYSEXP, SEXP TWSEXP, SEXP nwSEXP, SEXP NSEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const NumericVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H(HSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Hsq(HsqSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Ysq(YsqSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type HY(HYSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type TW(TWSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type nw(nwSEXP);
+    Rcpp::traits::input_parameter< const int& >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int& >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(lls_cpp(p, H, Hsq, Y, Ysq, HY, TW, nw, N, M));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lls_alt_cpp
+double lls_alt_cpp(const SEXP p, const SEXP H, const SEXP Hsq, const SEXP Y, const SEXP Ysq, const SEXP HY, const SEXP lTW, const SEXP nw, const int& N, const int& M);
+RcppExport SEXP _taxsimutilities_lls_alt_cpp(SEXP pSEXP, SEXP HSEXP, SEXP HsqSEXP, SEXP YSEXP, SEXP YsqSEXP, SEXP HYSEXP, SEXP lTWSEXP, SEXP nwSEXP, SEXP NSEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const SEXP >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type H(HSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type Hsq(HsqSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type Ysq(YsqSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type HY(HYSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type lTW(lTWSEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type nw(nwSEXP);
+    Rcpp::traits::input_parameter< const int& >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int& >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(lls_alt_cpp(p, H, Hsq, Y, Ysq, HY, lTW, nw, N, M));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fast_group_sum
 NumericVector fast_group_sum(NumericVector x, IntegerVector grp);
 RcppExport SEXP _taxsimutilities_fast_group_sum(SEXP xSEXP, SEXP grpSEXP) {
@@ -378,6 +513,14 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_taxsimutilities_greg_cpp_one", (DL_FUNC) &_taxsimutilities_greg_cpp_one, 3},
     {"_taxsimutilities_fast_bs_sum", (DL_FUNC) &_taxsimutilities_fast_bs_sum, 1},
+    {"_taxsimutilities_logSumExp", (DL_FUNC) &_taxsimutilities_logSumExp, 2},
+    {"_taxsimutilities_stable_ig", (DL_FUNC) &_taxsimutilities_stable_ig, 4},
+    {"_taxsimutilities_stable_n", (DL_FUNC) &_taxsimutilities_stable_n, 4},
+    {"_taxsimutilities_stable_p", (DL_FUNC) &_taxsimutilities_stable_p, 4},
+    {"_taxsimutilities_llc_cpp", (DL_FUNC) &_taxsimutilities_llc_cpp, 14},
+    {"_taxsimutilities_llc_alt_cpp", (DL_FUNC) &_taxsimutilities_llc_alt_cpp, 14},
+    {"_taxsimutilities_lls_cpp", (DL_FUNC) &_taxsimutilities_lls_cpp, 10},
+    {"_taxsimutilities_lls_alt_cpp", (DL_FUNC) &_taxsimutilities_lls_alt_cpp, 10},
     {"_taxsimutilities_fast_group_sum", (DL_FUNC) &_taxsimutilities_fast_group_sum, 2},
     {"_taxsimutilities_fast_group_max", (DL_FUNC) &_taxsimutilities_fast_group_max, 2},
     {"_taxsimutilities_fast_group_min", (DL_FUNC) &_taxsimutilities_fast_group_min, 2},
