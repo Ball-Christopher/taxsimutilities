@@ -100,14 +100,14 @@ void set_fast_seed(int n, uint64_t &t1, uint64_t &t2,
 static inline double
   ws (std::vector<double> &cw,
       uint64_t &s1, uint64_t &s2,
-      uint64_t &s3, uint64_t &s4){
+      uint64_t &s3, uint64_t &s4, const int M){
     // Note: changing from cw to &cw helps.  A lot.
     // Could potentially be faster with binary search...
     // or the Walker algorithm...
-    double u = to_double(next(s1, s2, s3, s4));
+    const double u = to_double(next(s1, s2, s3, s4));
     int i = 0;
     // This assumes that the last value of cw is 1 (or more).
-    while (cw[i] > u) i++;
+    while (cw[i] < u && i < (M - 2)) i++;
     return(i);
   }
 
@@ -117,14 +117,18 @@ static inline int
          uint64_t &s3, uint64_t &s4){
     // This is the fastest method I can find for lambda < 30.
     int k = 0;
-							
+    
     double p = 1.0;
     while (p > exp_neg_lambda){
-      p = p*to_double(next(s1, s2, s3, s4));
+      p *= to_double(next(s1, s2, s3, s4));
       k++;
     }
     return(k - 1);
   }
+
+double round_prec(double x, int prec) {
+  return round(x*pow(10,(double)prec))/pow(10,(double)prec);
+}
 
 //' @export
 // [[Rcpp::export(rng = false)]]
@@ -166,7 +170,6 @@ void run_sim_cpp_parallel(const int iters,
   
   const int max_choices = 100;
   std::vector<double> ui(M);
-  std::vector<double> eui(M);
   std::vector<double> vi(M);
   
   uint64_t x1 = 0;
@@ -189,11 +192,10 @@ void run_sim_cpp_parallel(const int iters,
   double diff_prob = 0.0;
   int mod_j = 0;
   double s_pois = 1.0;
-  int exc_count = 0;
   int inc_count = 0;
   int test = 0;
   
-#pragma omp parallel for num_threads(ncores) firstprivate(ui, vi, eui, x1, x2, x3, x4, cwi, ref_dist, exp_neg_lambda, err, choice, err_obs, max_u, max_ind, lam, index, du, obs_diff, diff_prob, mod_j, s_pois, exc_count, inc_count, test) default(none) shared(s, out_matrix)
+#pragma omp parallel for num_threads(ncores) firstprivate(ui, vi, x1, x2, x3, x4, cwi, ref_dist, exp_neg_lambda, err, choice, err_obs, max_u, max_ind, lam, index, du, obs_diff, diff_prob, mod_j, s_pois, inc_count, test) default(none) shared(s, out_matrix)
   for(int i = 0; i < N; ++i) {
     
     x1 = s[4*i];
@@ -205,7 +207,6 @@ void run_sim_cpp_parallel(const int iters,
     for (int j = 0; j < M; ++j){
       ui[j] = U[i + j*N];
       vi[j] = V[i + j*N];
-      eui[j] = exp(ui[j]);
     }
     
     exp_neg_lambda = exp(-lambda[i]);
@@ -213,7 +214,11 @@ void run_sim_cpp_parallel(const int iters,
     
     for (int it = 0; it < iters; ++it){
       
+      // Rcout << "The value of it : " << it << "\n";
+      
       index = in_matrix[i + N*it];
+      
+      // index = in_matrix[i + N*it];
       du = ui[index];
       
       for (int j = 0; j < M; ++j){
@@ -221,7 +226,7 @@ void run_sim_cpp_parallel(const int iters,
         vi[j] -= du;
       }
       
-      obs_diff = vi[index] - ui[index];
+      obs_diff = round_prec(vi[index] - ui[index], 6);
       
       // Extract the cumulative probabilities and lambda
       
@@ -254,19 +259,22 @@ void run_sim_cpp_parallel(const int iters,
       // Limit to max choices to avoid computational issues
       lam = cpois(exp_neg_lambda, x1, x2, x3, x4);
       lam = (lam > max_choices) ? max_choices : lam;
+      
+      // Rcout << "The value of lambda : " << lam << "\n";
+      
       // Sample from the NN reference distribution
       s_pois = 1.0;
-      exc_count = 0;
       inc_count = 0;
       test = 0;
       
       for (int k = 0; k < lam; ++k){
         
-        test = ws(cwi, x1, x2, x3, x4);
-        test += ((ref_dist[inc_count] >= index) ? 1 : 0);
+        test = ws(cwi, x1, x2, x3, x4, M);
+        test += ((test >= index) ? 1 : 0);
         
-        if (vi[test] - ui[test] <= obs_diff){
-          exc_count++;
+        // Rcout << "The value of choice : " << test << "\n";
+        
+        if (round_prec(vi[test] - ui[test], 6) <= obs_diff){
           continue;
         }
         
@@ -277,9 +285,9 @@ void run_sim_cpp_parallel(const int iters,
         // exp(ui[ref_dist[inc_count]]) instead of exp(ui[test])
         // convert to an integer, which messes with the distribution
         // of the observed error term.  
-        s_pois += eui[test];
+        s_pois += exp(ui[test]);
       }
-      lam -= exc_count;
+      lam = inc_count;
       s_pois = 1.0/s_pois;
       
       // Calculate the error at the observed point
@@ -296,7 +304,9 @@ void run_sim_cpp_parallel(const int iters,
         choice = ref_dist[k];
         
         err = - log(- log(to_double(next(x1, x2, x3, x4))) + 
-          eui[choice]*err_obs);
+          exp(ui[choice])*err_obs);
+        
+        // Rcout << "The value of err : " << max_ind << " " << choice << " " << vi[choice] + err << " " << max_u << "\n";
         
         if (vi[choice] + err > max_u){
           max_u = vi[choice] + err;
