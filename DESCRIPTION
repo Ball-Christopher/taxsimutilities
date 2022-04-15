@@ -5,7 +5,9 @@ Version: 1.1
 Date: 2022-03-05
 Author: Christopher Ball
 Maintainer: Christopher Ball <chrispball1@gmail.com>
-Description: This package provides utilities for Random Utility Random Opportunity (RURO) discrete choice modesl of labour supply.  These include C++ (through Rcpp) functions for estimation, simulation and a range of important functions that are slow in pure R.
+Description: This package provides utilities for Random Utility Random Opportunity (RURO) discrete choice modesl of labour supply.  
+These include C++ (through Rcpp) functions for estimation, simulation and a range of important functions that are slow in pure R.
+Note for earlier versions of R: SSE2 instructions are used, so the compiler flag -msse2 has been added to the MakeVars files.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.2)
 LinkingTo: Rcpp, RcppArmadillo
