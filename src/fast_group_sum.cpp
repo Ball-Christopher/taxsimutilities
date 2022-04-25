@@ -10,13 +10,13 @@ NumericVector fast_group_sum(NumericVector x,
   
   double y = 0.0;
   int tgrp = -1;
-  int ts = -1;
+  int ts = 0;
   
   // Go through linearly
   for(int i=0; i<n; i++){
     if (tgrp != grp[i]){
-      for (int s=ts; s<i; s++){
-        res[s] = y;
+      for (int s=ts; s<=i; s++){
+        res(s) = y;
       }
       tgrp = grp[i];
       ts = i;
@@ -27,7 +27,7 @@ NumericVector fast_group_sum(NumericVector x,
   
   // Clean up the final group
   for (int s=ts; s<n; s++){
-    res[s] = y;
+    res(s) = y;
   }
   
   return res;
@@ -42,13 +42,13 @@ NumericVector fast_group_max(NumericVector x,
   
   double y = 0.0;
   int tgrp = -1;
-  int ts = -1;
+  int ts = 0;
   
   // Go through linearly
   for(int i=0; i<n; i++){
     if (tgrp != grp[i]){
-      for (int s=ts; s<i; s++){
-        res[s] = y;
+      for (int s=ts; s<=i; s++){
+        res(s) = y;
       }
       tgrp = grp[i];
       ts = i;
@@ -59,7 +59,7 @@ NumericVector fast_group_max(NumericVector x,
   
   // Clean up the final group
   for (int s=ts; s<n; s++){
-    res[s] = y;
+    res(s) = y;
   }
   
   return res;
@@ -74,13 +74,13 @@ NumericVector fast_group_min(NumericVector x,
   
   double y = 0.0;
   int tgrp = -1;
-  int ts = -1;
+  int ts = 0;
   
   // Go through linearly
   for(int i=0; i<n; i++){
     if (tgrp != grp[i]){
-      for (int s=ts; s<i; s++){
-        res[s] = y;
+      for (int s=ts; s<=i; s++){
+        res(s) = y;
       }
       tgrp = grp[i];
       ts = i;
@@ -91,7 +91,7 @@ NumericVector fast_group_min(NumericVector x,
   
   // Clean up the final group
   for (int s=ts; s<n; s++){
-    res[s] = y;
+    res(s) = y;
   }
   
   return res;
