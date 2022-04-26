@@ -671,7 +671,9 @@ void test_intm(const std::vector<float> x,
   int evaluations = 0;
   double errorEstimate = 0.0;
   
-#pragma omp parallel for num_threads(ncores) firstprivate(f1, evaluations, errorEstimate) default(none) shared(integral)
+  // Compiler bug using default(none) with pragma
+  
+#pragma omp parallel for num_threads(ncores) firstprivate(f1, evaluations, errorEstimate) shared(integral)
   for (int row = 0; row < N; row++){
     f1.set_pars(y[row], y[row + N], y[row + 2*N], y[row + 3*N], y[row + 4*N]);
     for(int i = 0; i < M; ++i){

@@ -150,7 +150,7 @@ void run_sim_cpp_parallel(const int iters,
   uint64_t s4 = 0;
   set_fast_seed(seed, s1, s2, s3, s4);
   
-  uint64_t s[4*N];
+  std::vector<uint64_t> s(4*N);
   
   auto max_id = *max_element(std::begin(ID), std::end(ID));
   std::set<int> id_set(ID.begin(), ID.end());
@@ -195,7 +195,9 @@ void run_sim_cpp_parallel(const int iters,
   int inc_count = 0;
   int test = 0;
   
-#pragma omp parallel for num_threads(ncores) firstprivate(ui, vi, x1, x2, x3, x4, cwi, ref_dist, exp_neg_lambda, err, choice, err_obs, max_u, max_ind, lam, index, du, obs_diff, diff_prob, mod_j, s_pois, inc_count, test) default(none) shared(s, out_matrix)
+  // https://github.com/openwall/john/issues/3882 - gcc compiler issue using default(none).  Only in Rtools42
+  
+#pragma omp parallel for num_threads(ncores) firstprivate(ui, vi, x1, x2, x3, x4, cwi, ref_dist, exp_neg_lambda, err, choice, err_obs, max_u, max_ind, lam, index, du, obs_diff, diff_prob, mod_j, s_pois, inc_count, test) shared(s, out_matrix)
   for(int i = 0; i < N; ++i) {
     
     x1 = s[4*i];
