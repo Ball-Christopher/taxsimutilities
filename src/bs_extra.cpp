@@ -5,6 +5,8 @@ using namespace arma;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 
+// [[Rcpp::plugins(cpp11)]]
+
 //' @export
 // [[Rcpp::export]]
 arma::mat greg_cpp_one(arma::colvec W,

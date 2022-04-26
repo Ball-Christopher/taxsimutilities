@@ -3,6 +3,9 @@
 #include "logSum.hpp"
 using namespace Rcpp;
 
+// Added this for older versions of Rcpp
+// [[Rcpp::plugins(cpp11)]]
+
 // These are needed somewhere
 //' @useDynLib taxsimutilities, .registration = TRUE
 //' @importFrom Rcpp evalCpp

@@ -1,6 +1,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// [[Rcpp::plugins(cpp11)]]
+
 //' @export
 // [[Rcpp::export]]
 NumericVector fast_group_sum(NumericVector x,
