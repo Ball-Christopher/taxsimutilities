@@ -54,7 +54,7 @@ NumericVector fast_group_max(NumericVector x,
       }
       tgrp = grp[i];
       ts = i;
-      y = 0.0;
+      y = x[i];
     }
     if (x[i] > y) y = x[i];
   }
@@ -86,7 +86,7 @@ NumericVector fast_group_min(NumericVector x,
       }
       tgrp = grp[i];
       ts = i;
-      y = 1.0;
+      y = x[i];
     }
     if (x[i] < y) y = x[i];
   }
