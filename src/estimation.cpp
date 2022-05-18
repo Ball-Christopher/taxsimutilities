@@ -37,8 +37,8 @@ NumericVector stable_ig(
       tmp = W[i + j*N]*U[i + j*N];
       L[i] += tmp;
       E[i] += tmp*tmp;
-      }
     }
+  }
   
   for (int i = 0; i < N; ++i){
     L[i] /= (1.0 - W[i]);
@@ -72,8 +72,8 @@ NumericVector stable_n(
       tmp = W[i + j*N]*U[i + j*N];
       L[i] += tmp;
       E[i] += tmp*tmp;
-      }
     }
+  }
   
   for (int i = 0; i < N; ++i){
     L[i] /= (1.0 - W[i]);
@@ -107,8 +107,8 @@ NumericVector stable_p(
       tmp = W[i + j*N]*U[i + j*N];
       L[i] += tmp;
       E[i] += tmp*tmp;
-      }
     }
+  }
   
   for (int i = 0; i < N; ++i){
     L[i] /= (1.0 - W[i]);
@@ -117,7 +117,7 @@ NumericVector stable_p(
     D = tmp*tmp - 4.0*E[i]*(U[i] - L[i])*(U[i] - L[i]);
     if (D >= 0.0) n[i] = (tmp + sqrt(D))/(2.0*E[i]);
     else n[i] = 1.0;
-	p[i] = U[i]/(U[i] + (n[i] - 1.0)*L[i]);
+    p[i] = U[i]/(U[i] + (n[i] - 1.0)*L[i]);
   }
   
   return(p);
@@ -145,7 +145,7 @@ double llc_cpp(
   std::vector<double> Um(N);
   std::vector<double> d(N);
   // std::vector<double> tmp(M);
-   
+  
   double ll = 0;
   
   // Split the utility calculation into two stages to keep
@@ -337,6 +337,143 @@ double lls_alt_cpp(
     }
     sumexp[i] = logSumN(&tmp[0], M, 8, _int<12>());
     ll += w[i]*(U[i] - Um[i] - sumexp[i]);
+  }
+  
+  return(-ll);
+  
+}
+
+//' @export
+// [[Rcpp::export(rng = false)]]
+double llsopt_cpp(
+    const NumericVector p, 
+    const NumericMatrix H,  
+    const NumericMatrix Hsq, 
+    const NumericMatrix Y, 
+    const NumericMatrix Ysq, 
+    const NumericMatrix HY,
+    const NumericMatrix TW, 
+    const NumericVector nw,
+    const int &N, const int &M, const int &opt_mode){
+  
+  double phy = 0;
+  if (opt_mode < 9){
+    phy = p[4];
+  }
+  if (opt_mode == 9){
+    if (p[1]*p[3] < 0) return(-p[1]*p[3]);
+    phy = sqrt(4*p[1]*p[3]);
+  }
+  
+  if (opt_mode == 10){
+    if (p[1]*p[3] < 0) return(-p[1]*p[3]);
+    phy = -sqrt(p[1]*p[3] > 0);
+  }
+  
+  NumericMatrix U(N, M);
+  std::vector<double> Um(N);
+  std::vector<double> Us(N);
+  std::vector<double> d(N);
+  
+  double ll = 0;
+  
+  for (int j = 0; j < M; ++j){
+    for (int i = 0; i < N; ++i){
+      U[i + j*N] += p[0]*H[i + j*N] + p[1]*Hsq[i + j*N] +
+        p[2]*Y[i + j*N] + p[3]*Ysq[i + j*N] + 
+        phy*HY[i + j*N];
+      if ( (j == 0) || U[i + j*N] > Um[i]) Um[i] = U[i + j*N];
+    }
+  }
+  
+  // Convert to numerically stable version
+  for (int i = 0; i < N*M; i++) {
+    U[i] = exp(U[i] - Um[i%N]);
+  }
+  
+  if (opt_mode == 1){
+    for (int j = 0; j < M; ++j){
+      for (int i = 0; i < N; ++i){
+        Us[i] += TW[i + j*N]*U[i + j*N];
+      }
+    }
+    for (int i = 0; i < N; i++) {
+      ll += nw[i]*log(TW[i]*U[i]/Us[i]);
+    }
+    return(-ll);
+  }
+  
+  if (opt_mode == 3){
+    NumericVector ps = stable_p(U, TW, N, M);
+    for (int i = 0; i < N; i++) {
+      ll += nw[i]*sqrt(M*ps[i]);
+    }
+    return(-ll);
+  }
+  
+  if (opt_mode == 4){
+    for (int j = 0; j < M; ++j){
+      for (int i = 0; i < N; ++i){
+        Us[i] += TW[i + j*N]*U[i + j*N];
+      }
+    }
+    
+    std::vector<double> dh(N);
+    std::vector<double> dy(N);
+    for (int i = 0; i < N*M; i++) {
+      dh[i%N] += (p[0] + 2*p[1]*H[i] + phy*Y[i]) < 0.0 ? 1.0 : 0.0;
+      dy[i%N] += (p[2] + 2*p[3]*Y[i] + phy*H[i]) > 0.0 ? 1.0 : 0.0;
+    }
+    
+    std::vector<double> std_prob(N);
+    double min_prob = 0;
+    for (int i = 0; i < N; i++) {
+      std_prob[i] = log(TW[i]*U[i]/Us[i]);
+      if (std_prob[i] < min_prob) min_prob = std_prob[i];
+    }
+    
+    for (int i = 0; i < N; i++) {
+      ll += nw[i]*((dh[i] < M ? min_prob : std_prob[i]) + 
+        (dy[i] < M ? min_prob : std_prob[i]));
+    }
+    return(-ll);
+  }
+  
+  if (opt_mode == 5){
+    NumericVector ig = stable_ig(U, TW, N, M);
+    for (int i = 0; i < N; i++) {
+      ll += nw[i]*sqrt(ig[i]);
+    }
+    return(-ll);
+  }
+  
+  if (opt_mode == 7){
+    
+    for (int i = 0; i < N*M; i++) {
+      d[i%N] += (p[0] + 2.0*p[1]*H[i] + phy*Y[i]) < 0.0 ? 1.0 : 0.0;
+      d[i%N] += (p[2] + 2.0*p[3]*Y[i] + phy*H[i]) > 0.0 ? 1.0 : 0.0;
+    }
+    
+    NumericVector ps = stable_p(U, TW, N, M);
+    
+    for (int i = 0; i < N; i++) {
+      ll += d[i]/M*nw[i]*sqrt(M*ps[i]);
+    }
+    return(-ll);
+  }
+  
+  if (opt_mode == 8 || opt_mode == 9 || opt_mode == 10){
+    NumericVector ig = stable_ig(U, TW, N, M);
+    
+    for (int i = 0; i < N*M; i++) {
+      d[i%N] += (p[0] + 2*p[1]*H[i] + phy*Y[i]) < 0 ? 1.0 : 0.0;
+      d[i%N] += (p[2] + 2*p[3]*Y[i] + phy*H[i]) > 0 ? 1.0 : 0.0;
+    }
+    
+    for (int i = 0; i < N; i++) {
+      ll += d[i]/M*nw[i]*sqrt(ig[i]);
+    }
+    return(-ll);
   }
   
   return(-ll);

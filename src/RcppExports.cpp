@@ -170,6 +170,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// llsopt_cpp
+double llsopt_cpp(const NumericVector p, const NumericMatrix H, const NumericMatrix Hsq, const NumericMatrix Y, const NumericMatrix Ysq, const NumericMatrix HY, const NumericMatrix TW, const NumericVector nw, const int& N, const int& M, const int& opt_mode);
+RcppExport SEXP _taxsimutilities_llsopt_cpp(SEXP pSEXP, SEXP HSEXP, SEXP HsqSEXP, SEXP YSEXP, SEXP YsqSEXP, SEXP HYSEXP, SEXP TWSEXP, SEXP nwSEXP, SEXP NSEXP, SEXP MSEXP, SEXP opt_modeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const NumericVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H(HSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Hsq(HsqSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Ysq(YsqSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type HY(HYSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type TW(TWSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type nw(nwSEXP);
+    Rcpp::traits::input_parameter< const int& >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int& >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const int& >::type opt_mode(opt_modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(llsopt_cpp(p, H, Hsq, Y, Ysq, HY, TW, nw, N, M, opt_mode));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fast_group_sum
 NumericVector fast_group_sum(NumericVector x, IntegerVector grp);
 RcppExport SEXP _taxsimutilities_fast_group_sum(SEXP xSEXP, SEXP grpSEXP) {
@@ -521,6 +541,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_taxsimutilities_llc_alt_cpp", (DL_FUNC) &_taxsimutilities_llc_alt_cpp, 14},
     {"_taxsimutilities_lls_cpp", (DL_FUNC) &_taxsimutilities_lls_cpp, 10},
     {"_taxsimutilities_lls_alt_cpp", (DL_FUNC) &_taxsimutilities_lls_alt_cpp, 10},
+    {"_taxsimutilities_llsopt_cpp", (DL_FUNC) &_taxsimutilities_llsopt_cpp, 11},
     {"_taxsimutilities_fast_group_sum", (DL_FUNC) &_taxsimutilities_fast_group_sum, 2},
     {"_taxsimutilities_fast_group_max", (DL_FUNC) &_taxsimutilities_fast_group_max, 2},
     {"_taxsimutilities_fast_group_min", (DL_FUNC) &_taxsimutilities_fast_group_min, 2},

@@ -56,6 +56,11 @@ lls_alt_cpp <- function(p, H, Hsq, Y, Ysq, HY, lTW, nw, N, M) {
 }
 
 #' @export
+llsopt_cpp <- function(p, H, Hsq, Y, Ysq, HY, TW, nw, N, M, opt_mode) {
+    .Call(`_taxsimutilities_llsopt_cpp`, p, H, Hsq, Y, Ysq, HY, TW, nw, N, M, opt_mode)
+}
+
+#' @export
 fast_group_sum <- function(x, grp) {
     .Call(`_taxsimutilities_fast_group_sum`, x, grp)
 }
