@@ -109,6 +109,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// llcopt_cpp
+double llcopt_cpp(const NumericVector p, const NumericMatrix H1, const NumericMatrix H2, const NumericMatrix H1sq, const NumericMatrix H2sq, const NumericMatrix H1H2, const NumericMatrix Y, const NumericMatrix H1Y, const NumericMatrix H2Y, const NumericMatrix Ysq, const NumericMatrix TW, const NumericVector nw, const int& N, const int& M, const int& opt_mode);
+RcppExport SEXP _taxsimutilities_llcopt_cpp(SEXP pSEXP, SEXP H1SEXP, SEXP H2SEXP, SEXP H1sqSEXP, SEXP H2sqSEXP, SEXP H1H2SEXP, SEXP YSEXP, SEXP H1YSEXP, SEXP H2YSEXP, SEXP YsqSEXP, SEXP TWSEXP, SEXP nwSEXP, SEXP NSEXP, SEXP MSEXP, SEXP opt_modeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const NumericVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H1(H1SEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H2(H2SEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H1sq(H1sqSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H2sq(H2sqSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H1H2(H1H2SEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H1Y(H1YSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type H2Y(H2YSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type Ysq(YsqSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix >::type TW(TWSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type nw(nwSEXP);
+    Rcpp::traits::input_parameter< const int& >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int& >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const int& >::type opt_mode(opt_modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(llcopt_cpp(p, H1, H2, H1sq, H2sq, H1H2, Y, H1Y, H2Y, Ysq, TW, nw, N, M, opt_mode));
+    return rcpp_result_gen;
+END_RCPP
+}
 // llc_alt_cpp
 double llc_alt_cpp(const SEXP p, const SEXP H1, const SEXP H2, const SEXP H1sq, const SEXP H2sq, const SEXP H1H2, const SEXP Y, const SEXP H1Y, const SEXP H2Y, const SEXP Ysq, const SEXP lTW, const SEXP nw, const int& N, const int& M);
 RcppExport SEXP _taxsimutilities_llc_alt_cpp(SEXP pSEXP, SEXP H1SEXP, SEXP H2SEXP, SEXP H1sqSEXP, SEXP H2sqSEXP, SEXP H1H2SEXP, SEXP YSEXP, SEXP H1YSEXP, SEXP H2YSEXP, SEXP YsqSEXP, SEXP lTWSEXP, SEXP nwSEXP, SEXP NSEXP, SEXP MSEXP) {
@@ -538,6 +562,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_taxsimutilities_stable_n", (DL_FUNC) &_taxsimutilities_stable_n, 4},
     {"_taxsimutilities_stable_p", (DL_FUNC) &_taxsimutilities_stable_p, 4},
     {"_taxsimutilities_llc_cpp", (DL_FUNC) &_taxsimutilities_llc_cpp, 14},
+    {"_taxsimutilities_llcopt_cpp", (DL_FUNC) &_taxsimutilities_llcopt_cpp, 15},
     {"_taxsimutilities_llc_alt_cpp", (DL_FUNC) &_taxsimutilities_llc_alt_cpp, 14},
     {"_taxsimutilities_lls_cpp", (DL_FUNC) &_taxsimutilities_lls_cpp, 10},
     {"_taxsimutilities_lls_alt_cpp", (DL_FUNC) &_taxsimutilities_lls_alt_cpp, 10},

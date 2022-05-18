@@ -186,6 +186,186 @@ double llc_cpp(
 
 //' @export
 // [[Rcpp::export(rng = false)]]
+double llcopt_cpp(
+    const NumericVector p, 
+    const NumericMatrix H1, 
+    const NumericMatrix H2, 
+    const NumericMatrix H1sq, 
+    const NumericMatrix H2sq, 
+    const NumericMatrix H1H2, 
+    const NumericMatrix Y, 
+    const NumericMatrix H1Y, 
+    const NumericMatrix H2Y, 
+    const NumericMatrix Ysq, 
+    const NumericMatrix TW, 
+    const NumericVector nw,
+    const int &N, const int &M, const int &opt_mode){
+  
+  // Update this - do we need 4 different combinations of positive and negative?
+  double phy1 = 0;
+  double phy2 = 0;
+  if (opt_mode < 9){
+    phy1 = p[7];
+    phy2 = p[8];
+  }
+  if (opt_mode == 9){
+    if (p[1]*p[6] < 0) return(-p[1]*p[6]);
+    if (p[3]*p[6] < 0) return(-p[3]*p[6]);
+    phy1 = sqrt(4*p[1]*p[6]);
+    phy2 = sqrt(4*p[3]*p[6]);
+  }
+  
+  if (opt_mode == 10){
+    if (p[1]*p[6] < 0) return(-p[1]*p[6]);
+    if (p[3]*p[6] < 0) return(-p[3]*p[6]);
+    phy1 = -sqrt(4*p[1]*p[6]);
+    phy2 = sqrt(4*p[3]*p[6]);
+  }
+  
+  if (opt_mode == 11){
+    if (p[1]*p[6] < 0) return(-p[1]*p[6]);
+    if (p[3]*p[6] < 0) return(-p[3]*p[6]);
+    phy1 = sqrt(4*p[1]*p[6]);
+    phy2 = -sqrt(4*p[3]*p[6]);
+  }
+  
+  if (opt_mode == 12){
+    if (p[1]*p[6] < 0) return(-p[1]*p[6]);
+    if (p[3]*p[6] < 0) return(-p[3]*p[6]);
+    phy1 = -sqrt(4*p[1]*p[6]);
+    phy2 = -sqrt(4*p[3]*p[6]);
+  }
+  
+  NumericMatrix U(N, M);
+  std::vector<double> Um(N);
+  std::vector<double> Us(N);
+  std::vector<double> d(N);
+  
+  double ll = 0;
+  
+  for (int i = 0; i < N*M; i++) {
+    U[i] = p[0]*H1[i] + p[1]*H1sq[i] + p[2]*H2[i] +
+      p[3]*H2sq[i] + p[4]*H1H2[i];
+  }
+  
+  for (int j = 0; j < M; ++j){
+    for (int i = 0; i < N; ++i){
+      U[i + j*N] += p[5]*Y[i + j*N] + p[6]*Ysq[i + j*N] + 
+        phy1*H1Y[i + j*N] + phy2*H2Y[i + j*N];
+      if ( (j == 0) || U[i + j*N] > Um[i]) Um[i] = U[i + j*N];
+    }
+  }
+  
+  // Convert to numerically stable version
+  for (int i = 0; i < N*M; i++) {
+    U[i] = exp(U[i] - Um[i%N]);
+  }
+  
+  if (opt_mode == 1){
+    for (int j = 0; j < M; ++j){
+      for (int i = 0; i < N; ++i){
+        Us[i] += TW[i + j*N]*U[i + j*N];
+      }
+    }
+    for (int i = 0; i < N; i++) {
+      ll += nw[i]*log(TW[i]*U[i]/Us[i]);
+    }
+    return(-ll);
+  }
+  
+  if (opt_mode == 3){
+    NumericVector ps = stable_p(U, TW, N, M);
+    for (int i = 0; i < N; i++) {
+      ll += nw[i]*sqrt(M*ps[i]);
+    }
+    return(-ll);
+  }
+  
+  if (opt_mode == 4){
+    for (int j = 0; j < M; ++j){
+      for (int i = 0; i < N; ++i){
+        Us[i] += TW[i + j*N]*U[i + j*N];
+      }
+    }
+    
+    std::vector<double> dh1(N);
+    std::vector<double> dh2(N);
+    std::vector<double> dy(N);
+    for (int i = 0; i < N*M; i++) {
+      dh1[i%N] += (p[0] + 2.0*p[1]*H1[i] + 
+        p[4]*H2[i] + phy1*Y[i]) < 0.0 ? 1.0 : 0.0;
+      dh2[i%N] += (p[2] + 2*p[3]*H2[i] + 
+        p[4]*H1[i] + phy2*Y[i]) < 0.0 ? 1.0 : 0.0;
+      dy[i%N] += (p[5] + 2*p[6]*Y[i] + 
+        phy1*H1[i] + phy2*H2[i]) > 0.0 ? 1.0 : 0.0;
+    }
+    
+    std::vector<double> std_prob(N);
+    double min_prob = 0;
+    for (int i = 0; i < N; i++) {
+      std_prob[i] = log(TW[i]*U[i]/Us[i]);
+      if (std_prob[i] < min_prob) min_prob = std_prob[i];
+    }
+    
+    for (int i = 0; i < N; i++) {
+      ll += nw[i]*((dh1[i] < M ? min_prob : std_prob[i]) +
+        (dh2[i] < M ? min_prob : std_prob[i]) +
+        (dy[i] < M ? min_prob : std_prob[i]));
+    }
+    return(-ll);
+  }
+  
+  if (opt_mode == 5){
+    NumericVector ig = stable_ig(U, TW, N, M);
+    for (int i = 0; i < N; i++) {
+      ll += nw[i]*sqrt(ig[i]);
+    }
+    return(-ll);
+  }
+  
+  if (opt_mode == 7){
+    
+    for (int i = 0; i < N*M; i++) {
+      d[i%N] += (p[0] + 2*p[1]*H1[i] + 
+        p[4]*H2[i] + phy1*Y[i]) < 0 ? 1.0 : 0.0;
+      d[i%N] += (p[2] + 2*p[3]*H2[i] + 
+        p[4]*H1[i] + phy2*Y[i]) < 0 ? 1.0 : 0.0;
+      d[i%N] += (p[5] + 2*p[6]*Y[i] + 
+        phy1*H1[i] + phy2*H2[i]) > 0 ? 1.0 : 0.0;
+    }
+    
+    NumericVector ps = stable_p(U, TW, N, M);
+    
+    for (int i = 0; i < N; i++) {
+      ll += d[i]/M*nw[i]*sqrt(M*ps[i]);
+    }
+    return(-ll);
+  }
+  
+  if (opt_mode >= 8){
+    NumericVector ig = stable_ig(U, TW, N, M);
+    
+    for (int i = 0; i < N*M; i++) {
+      d[i%N] += (p[0] + 2*p[1]*H1[i] + 
+        p[4]*H2[i] + phy1*Y[i]) < 0 ? 1.0 : 0.0;
+      d[i%N] += (p[2] + 2*p[3]*H2[i] + 
+        p[4]*H1[i] + phy2*Y[i]) < 0 ? 1.0 : 0.0;
+      d[i%N] += (p[5] + 2*p[6]*Y[i] + 
+        phy1*H1[i] + phy2*H2[i]) > 0 ? 1.0 : 0.0;
+    }
+    
+    for (int i = 0; i < N; i++) {
+      ll += d[i]/M*nw[i]*sqrt(ig[i]);
+    }
+    return(-ll);
+  }
+  
+  return(-ll);
+  
+}
+
+//' @export
+// [[Rcpp::export(rng = false)]]
 double llc_alt_cpp(
     const SEXP p, 
     const SEXP H1, 

@@ -41,6 +41,11 @@ llc_cpp <- function(p, H1, H2, H1sq, H2sq, H1H2, Y, H1Y, H2Y, Ysq, TW, nw, N, M)
 }
 
 #' @export
+llcopt_cpp <- function(p, H1, H2, H1sq, H2sq, H1H2, Y, H1Y, H2Y, Ysq, TW, nw, N, M, opt_mode) {
+    .Call(`_taxsimutilities_llcopt_cpp`, p, H1, H2, H1sq, H2sq, H1H2, Y, H1Y, H2Y, Ysq, TW, nw, N, M, opt_mode)
+}
+
+#' @export
 llc_alt_cpp <- function(p, H1, H2, H1sq, H2sq, H1H2, Y, H1Y, H2Y, Ysq, lTW, nw, N, M) {
     .Call(`_taxsimutilities_llc_alt_cpp`, p, H1, H2, H1sq, H2sq, H1H2, Y, H1Y, H2Y, Ysq, lTW, nw, N, M)
 }
