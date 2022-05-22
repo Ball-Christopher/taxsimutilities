@@ -202,38 +202,29 @@ double llcopt_cpp(
     const int &N, const int &M, const int &opt_mode){
   
   // Update this - do we need 4 different combinations of positive and negative?
-  double phy1 = 0;
-  double phy2 = 0;
+  double phy1 = 0.0;
+  double phy2 = 0.0;
+  double ph1h2 = 0.0;
   if (opt_mode < 9){
+    ph1h2 = p[4];
     phy1 = p[7];
     phy2 = p[8];
   }
+  
   if (opt_mode == 9){
-    if (p[1]*p[6] < 0) return(-p[1]*p[6]);
-    if (p[3]*p[6] < 0) return(-p[3]*p[6]);
-    phy1 = sqrt(4*p[1]*p[6]);
-    phy2 = sqrt(4*p[3]*p[6]);
+    if (p[1]*p[6] < 0.0) return(-p[1]*p[6]);
+    if (p[3]*p[6] < 0.0) return(-p[3]*p[6]);
+    ph1h2 = p[4];
+    phy1 = (p[7] > 0.0 ? 1.0 : -1.0)*sqrt(4*p[1]*p[6]);
+    phy2 = (p[8] > 0.0 ? 1.0 : -1.0)*sqrt(4*p[3]*p[6]);
   }
   
   if (opt_mode == 10){
-    if (p[1]*p[6] < 0) return(-p[1]*p[6]);
-    if (p[3]*p[6] < 0) return(-p[3]*p[6]);
-    phy1 = -sqrt(4*p[1]*p[6]);
-    phy2 = sqrt(4*p[3]*p[6]);
-  }
-  
-  if (opt_mode == 11){
-    if (p[1]*p[6] < 0) return(-p[1]*p[6]);
-    if (p[3]*p[6] < 0) return(-p[3]*p[6]);
-    phy1 = sqrt(4*p[1]*p[6]);
-    phy2 = -sqrt(4*p[3]*p[6]);
-  }
-  
-  if (opt_mode == 12){
-    if (p[1]*p[6] < 0) return(-p[1]*p[6]);
-    if (p[3]*p[6] < 0) return(-p[3]*p[6]);
-    phy1 = -sqrt(4*p[1]*p[6]);
-    phy2 = -sqrt(4*p[3]*p[6]);
+    if (p[1]*p[6] < 0.0) return(-p[1]*p[6]);
+    if (p[3]*p[6] < 0.0) return(-p[3]*p[6]);
+    ph1h2 = (p[4] > 0.0 ? 1.0 : -1.0)*sqrt(4*p[1]*p[3]);
+    phy1 = (p[7] > 0.0 ? 1.0 : -1.0)*sqrt(4*p[1]*p[6]);
+    phy2 = (p[8] > 0.0 ? 1.0 : -1.0)*sqrt(4*p[3]*p[6]);
   }
   
   NumericMatrix U(N, M);
@@ -241,11 +232,11 @@ double llcopt_cpp(
   std::vector<double> Us(N);
   std::vector<double> d(N);
   
-  double ll = 0;
+  double ll = 0.0;
   
   for (int i = 0; i < N*M; i++) {
     U[i] = p[0]*H1[i] + p[1]*H1sq[i] + p[2]*H2[i] +
-      p[3]*H2sq[i] + p[4]*H1H2[i];
+      p[3]*H2sq[i] + ph1h2*H1H2[i];
   }
   
   for (int j = 0; j < M; ++j){
@@ -293,9 +284,9 @@ double llcopt_cpp(
     std::vector<double> dy(N);
     for (int i = 0; i < N*M; i++) {
       dh1[i%N] += (p[0] + 2.0*p[1]*H1[i] + 
-        p[4]*H2[i] + phy1*Y[i]) < 0.0 ? 1.0 : 0.0;
+        ph1h2*H2[i] + phy1*Y[i]) < 0.0 ? 1.0 : 0.0;
       dh2[i%N] += (p[2] + 2*p[3]*H2[i] + 
-        p[4]*H1[i] + phy2*Y[i]) < 0.0 ? 1.0 : 0.0;
+        ph1h2*H1[i] + phy2*Y[i]) < 0.0 ? 1.0 : 0.0;
       dy[i%N] += (p[5] + 2*p[6]*Y[i] + 
         phy1*H1[i] + phy2*H2[i]) > 0.0 ? 1.0 : 0.0;
     }
@@ -326,11 +317,11 @@ double llcopt_cpp(
   if (opt_mode == 7){
     
     for (int i = 0; i < N*M; i++) {
-      d[i%N] += (p[0] + 2*p[1]*H1[i] + 
-        p[4]*H2[i] + phy1*Y[i]) < 0 ? 1.0 : 0.0;
-      d[i%N] += (p[2] + 2*p[3]*H2[i] + 
-        p[4]*H1[i] + phy2*Y[i]) < 0 ? 1.0 : 0.0;
-      d[i%N] += (p[5] + 2*p[6]*Y[i] + 
+      d[i%N] += (p[0] + 2.0*p[1]*H1[i] + 
+        ph1h2*H2[i] + phy1*Y[i]) < 0 ? 1.0 : 0.0;
+      d[i%N] += (p[2] + 2.0*p[3]*H2[i] + 
+        ph1h2*H1[i] + phy2*Y[i]) < 0 ? 1.0 : 0.0;
+      d[i%N] += (p[5] + 2.0*p[6]*Y[i] + 
         phy1*H1[i] + phy2*H2[i]) > 0 ? 1.0 : 0.0;
     }
     
@@ -346,11 +337,11 @@ double llcopt_cpp(
     NumericVector ig = stable_ig(U, TW, N, M);
     
     for (int i = 0; i < N*M; i++) {
-      d[i%N] += (p[0] + 2*p[1]*H1[i] + 
-        p[4]*H2[i] + phy1*Y[i]) < 0 ? 1.0 : 0.0;
-      d[i%N] += (p[2] + 2*p[3]*H2[i] + 
-        p[4]*H1[i] + phy2*Y[i]) < 0 ? 1.0 : 0.0;
-      d[i%N] += (p[5] + 2*p[6]*Y[i] + 
+      d[i%N] += (p[0] + 2.0*p[1]*H1[i] + 
+        ph1h2*H2[i] + phy1*Y[i]) < 0 ? 1.0 : 0.0;
+      d[i%N] += (p[2] + 2.0*p[3]*H2[i] + 
+        ph1h2*H1[i] + phy2*Y[i]) < 0 ? 1.0 : 0.0;
+      d[i%N] += (p[5] + 2.0*p[6]*Y[i] + 
         phy1*H1[i] + phy2*H2[i]) > 0 ? 1.0 : 0.0;
     }
     
